@@ -1,0 +1,36 @@
+{
+    "SourceFiles" : [
+        {
+            "SourceFileLocation" : {
+                "Path" : "../config-seperation/pantry/config_tests/test_files_directory/nested_directory/nested_${Sub1}_file_1.json",
+                "PathSubs" : {
+                    "Sub1" : {
+                        "Type" : "Parameter",
+                        "Value" : "TheWordTest"
+                    }
+                }
+            },
+            "SourceFileRoot" : "$.AnotherKeyInTheFile",
+            "DestinationFileContent" : "$"
+        },
+        {
+            "SourceFileLocation" : {
+                "Path" : "../config-seperation/pantry/config_tests/test_files_directory/nested_directory/nested_${Sub1}_file_2.json",
+                "PathSubs" : {
+                    "Sub1" : {
+                        "Type" : "Literal",
+                        "Value" : "test"
+                    }
+                }
+            },
+            "SourceFileRoot" : "$.AnotherKeyInTheFile",
+            "DestinationFileContent" : "$"
+        }
+    ],
+    "DestinationFile" : {
+        "DestinationFileLocation" : {
+            "Path" : "Users/samuellock/Documents/GitHub/../config-seperation/pantry/config_tests/test_files_directory/nested_directory/build_test_merged_file.json",
+            "PathSubs" : {}
+        }
+    }
+}

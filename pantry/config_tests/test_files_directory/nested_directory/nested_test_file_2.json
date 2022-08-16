@@ -1,0 +1,7 @@
+{
+    "AKeyInFile2" : "A value in file 2",
+    "AnotherKeyInTheFile" : {
+        "UhOh2" : "This",
+        "OneIs2" : "NestedAlso"
+    }
+}
