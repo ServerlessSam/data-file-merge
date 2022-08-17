@@ -55,6 +55,11 @@ class FileLocation():
         p = Path('/') #TODO somehow set the root node to search for files from. Either an env var or in the file. Probably the file.
         return list(p.glob(self.substituted_path))
 
+
+    '''
+    Synopsis: Performs a substitution on the 'path' attribute using the 'subs' attributes as substitutions.
+    Returns: A fully substitutited path.
+    '''
     def substitute(self) -> str:
         subbed_path = self.path
         for sub_key in self.subs:

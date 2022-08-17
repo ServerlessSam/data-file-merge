@@ -31,20 +31,20 @@ class TestSubstitutions:
 class TestFileLocations:
     def test_file_locations(self):
         file_location = FileLocation(
-            path="Users/samuellock/Documents/GitHub/config-seperation/pantry/config_tests/test_files_directory/${Sub1}/nested_test_file_*.json",
+            path="Users/samuellock/Documents/GitHub/config-seperation/tests/test_files_directory/${Sub1}/nested_test_file_*.json",
             subs={
                 "Sub1" : Substitution(LiteralReferenceType(), "nested_directory")
             }
         )
         assert file_location.resolved_paths == [
-            Path("/Users/samuellock/Documents/GitHub/config-seperation/pantry/config_tests/test_files_directory/nested_directory/nested_test_file_1.json"),
-            Path("/Users/samuellock/Documents/GitHub/config-seperation/pantry/config_tests/test_files_directory/nested_directory/nested_test_file_2.json")
+            Path("/Users/samuellock/Documents/GitHub/config-seperation/tests/test_files_directory/nested_directory/nested_test_file_1.json"),
+            Path("/Users/samuellock/Documents/GitHub/config-seperation/tests/test_files_directory/nested_directory/nested_test_file_2.json")
         ]
 
 class TestDestinationFiles:
     def test_destination_files(self):
         dest_file_location = FileLocation(
-            path="Users/samuellock/Documents/GitHub/config-seperation/pantry/config_tests/test_files_directory/${Sub1}/nested_test_file_1.json",
+            path="Users/samuellock/Documents/GitHub/config-seperation/tests/test_files_directory/${Sub1}/nested_test_file_1.json",
             subs={
                 "Sub1" : Substitution(LiteralReferenceType(), "nested_directory")
             }
@@ -55,18 +55,18 @@ class TestDestinationFiles:
 
     def test_destination_file_doesnt_exist(self):
         dest_file_location = FileLocation(
-            path="Users/samuellock/Documents/GitHub/config-seperation/pantry/config_tests/test_files_directory/${Sub1}/nested_test_file_DOESNT_EXIST.json",
+            path="Users/samuellock/Documents/GitHub/config-seperation/tests/test_files_directory/${Sub1}/nested_test_file_DOESNT_EXIST.json",
             subs={
                 "Sub1" : Substitution(LiteralReferenceType(), "nested_directory")
             }
         )
         dest = DestinationFile(dest_file_location)
-        assert dest.file_content == None
+        assert dest.file_content == {}
 
 class TestSourceFiles:
     def test_source_files(self):
         file_location = FileLocation(
-            path="Users/samuellock/Documents/GitHub/config-seperation/pantry/config_tests/test_files_directory/${Sub1}/nested_test_file_*.json",
+            path="Users/samuellock/Documents/GitHub/config-seperation/tests/test_files_directory/${Sub1}/nested_test_file_*.json",
             subs={
                 "Sub1" : Substitution(LiteralReferenceType(), "nested_directory")
             }
@@ -80,7 +80,7 @@ class TestSourceFiles:
 class TestConfigs:
     def test_configs(self):
         src_file_location = FileLocation(
-            path="Users/samuellock/Documents/GitHub/config-seperation/pantry/config_tests/test_files_directory/${Sub1}/nested_test_file_*.json",
+            path="Users/samuellock/Documents/GitHub/config-seperation/tests/test_files_directory/${Sub1}/nested_test_file_*.json",
             subs={
                 "Sub1" : Substitution(LiteralReferenceType(), "nested_directory")
             }
@@ -88,7 +88,7 @@ class TestConfigs:
         src = SourceFile(src_file_location, "$.AnotherKeyInTheFile", "$" )
         
         dest_file_location = FileLocation(
-            path="Users/samuellock/Documents/GitHub/config-seperation/pantry/config_tests/test_files_directory/${Sub1}/build_test_merged_file.json",
+            path="Users/samuellock/Documents/GitHub/config-seperation/tests/test_files_directory/${Sub1}/build_test_merged_file.json",
             subs={
                 "Sub1" : Substitution(LiteralReferenceType(), "nested_directory")
             }
@@ -106,7 +106,7 @@ class TestConfigs:
 
     def test_config_build(self):
         src_file_location = FileLocation(
-            path="Users/samuellock/Documents/GitHub/config-seperation/pantry/config_tests/test_files_directory/${Sub1}/nested_test_file_*.json",
+            path="Users/samuellock/Documents/GitHub/config-seperation/tests/test_files_directory/${Sub1}/nested_test_file_*.json",
             subs={
                 "Sub1" : Substitution(LiteralReferenceType(), "nested_directory")
             }
@@ -114,7 +114,7 @@ class TestConfigs:
         src = SourceFile(src_file_location, "$.AnotherKeyInTheFile", "$" )
         
         dest_file_location = FileLocation(
-            path="Users/samuellock/Documents/GitHub/config-seperation/pantry/config_tests/test_files_directory/${Sub1}/build_test_merged_file.json",
+            path="Users/samuellock/Documents/GitHub/config-seperation/tests/test_files_directory/${Sub1}/build_test_merged_file.json",
             subs={
                 "Sub1" : Substitution(LiteralReferenceType(), "nested_directory")
             }
@@ -124,7 +124,7 @@ class TestConfigs:
         config = BuildConfig([src], dest)
         config.build()
         
-        assert JsonFileType.load_from_file("/Users/samuellock/Documents/GitHub/config-seperation/pantry/config_tests/test_files_directory/nested_directory/build_test_merged_file.json") == {
+        assert JsonFileType.load_from_file("/Users/samuellock/Documents/GitHub/config-seperation/tests/test_files_directory/nested_directory/build_test_merged_file.json") == {
             "Hello" : "There",
             "UhOh" : "This",
             "OneIs" : "Nested",
@@ -138,7 +138,7 @@ class TestConfigs:
             source_files=[
                 SourceFile(
                     source_file_location = FileLocation(
-                        path="../config-seperation/pantry/config_tests/test_files_directory/nested_directory/nested_${Sub1}_file_1.json",
+                        path="../config-seperation/tests/test_files_directory/nested_directory/nested_${Sub1}_file_1.json",
                         subs = {
                             "Sub1" : Substitution(
                                 ParameterReferenceType(parameters),
@@ -151,7 +151,7 @@ class TestConfigs:
                 ),
                 SourceFile(
                     source_file_location = FileLocation(
-                        path="../config-seperation/pantry/config_tests/test_files_directory/nested_directory/nested_${Sub1}_file_2.json",
+                        path="../config-seperation/tests/test_files_directory/nested_directory/nested_${Sub1}_file_2.json",
                         subs = {
                             "Sub1" : Substitution(
                                 LiteralReferenceType(),
@@ -165,12 +165,12 @@ class TestConfigs:
             ],
             destination_file=DestinationFile(
                 FileLocation(
-                    path = "Users/samuellock/Documents/GitHub/../config-seperation/pantry/config_tests/test_files_directory/nested_directory/build_test_merged_file.json"
+                    path = "Users/samuellock/Documents/GitHub/../config-seperation/tests/test_files_directory/nested_directory/build_test_merged_file.json"
                 )
             )
         )
         generated_config = BuildConfig.load_config_from_file(
-            file_path = "/Users/samuellock/Documents/GitHub/config-seperation/pantry/config_tests/test_files_directory/nested_directory/build_test_config.json",
+            file_path = "/Users/samuellock/Documents/GitHub/config-seperation/tests/test_files_directory/nested_directory/build_test_config.json",
             parameters = parameters
         )
         assert expected_config == generated_config

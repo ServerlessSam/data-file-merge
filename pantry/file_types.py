@@ -17,8 +17,8 @@ class JsonFileType(BaseFileType):
     @classmethod
     def load_from_file(self, file_path:Path):
         with open(file_path, "r") as loadedFile:
-            dictionary = json.load(loadedFile)
-        return dictionary
+            obj = json.load(loadedFile)
+        return obj
 
     @classmethod
     def save_to_file(self, object:dict | list, file_path:Path):

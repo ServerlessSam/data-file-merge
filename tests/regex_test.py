@@ -1,4 +1,5 @@
 from pantry.regex import RegexExtractor
+import pytest
 
 class TestRegexExtractor:
 
@@ -21,3 +22,8 @@ class TestRegexExtractor:
             ):
             regex = RegexExtractor("(.+)::(.+)::(.+)", i)
             assert regex.resolve("AWS::Ec2::Instance") == expected_val
+
+    def test_out_of_bounds_extraction(self):
+        regex = RegexExtractor("(?P<provider>.+)::(?P<service>.+)::(?P<datatype>.+)", "something_else")
+        with pytest.raises(IndexError):
+            assert regex.resolve("AWS::Ec2::Instance")

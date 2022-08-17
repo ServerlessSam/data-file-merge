@@ -24,7 +24,10 @@ class ParameterReferenceType(BaseReferenceType):
 
     def evaluate(self, value:str, regex:str=None) -> str:
         if value in self.parameters:
-            return self.parameters[value]
+            if regex:
+                return regex.resolve(self.parameters[value])
+            else:
+                return self.parameters[value]
         else:
             raise Exception(f"Expected parameter with name '{value}' not found. Are your parameters correct?")
 
@@ -102,7 +105,10 @@ class LiteralReferenceType(BaseReferenceType):
         value = The string to blindly return
     '''
     def evaluate(self, value:str, regex:str=None) -> str:
-        return str(value)
+        if regex:
+            return regex.resolve(str(value))
+        else:
+            return str(value)
 
 @dataclass
 class ReferenceTypeFactory:

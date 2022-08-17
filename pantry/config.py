@@ -56,7 +56,7 @@ class DestinationFile():
                 Path("/") /self.destination_file_location.substituted_path
             )
         else:
-            self.file_content = None
+            self.file_content = {}
 
 @dataclass
 class BuildConfig():
@@ -91,19 +91,20 @@ class BuildConfig():
         for src in self.source_files:
             jsonpath_expr = parse(src.destination_file_content)
             dest_content_matches = [match.value for match in jsonpath_expr.find(dest_content)]
-            if len(dest_content_matches) > 1:
-                raise Exception(f"Multiple destination nodes found ({len(dest_content_matches)}). Expected only 0 or 1.")
-            elif not dest_content_matches:
-                dest_content_matches = [{}] # TODO: Review this as the default. SHould it be dict?
-            destination_match = dest_content_matches[0]
-            dest_json_merger = JsonMergerFactory(destination_match).generate_json_merger()
-            for content in src.retreived_src_content:
-                dest_json_merger.merge_obj(content)
-            dest_content = dest_json_merger.json_dict
+            for destination_match in dest_content_matches:
+                dest_json_merger = JsonMergerFactory(destination_match).generate_json_merger()
+                for src_content in src.retreived_src_content:
+                    dest_json_merger.merge_obj(src_content)
+                dest_content = jsonpath_expr.update_or_create(dest_content, dest_json_merger.json_obj)
         return dest_content
 
     def write_content(self, content:dict):
-        JsonFileType.save_to_file(content, self.destination_file.destination_file_location.resolved_paths[0])
+
+        # Only current use case is writing a destination file which at the moment uses the substituted path instead of a resolved path.
+        # This is because the file to write to can be new so doesn't resolve (hence have empty list for resolved_paths)
+        #JsonFileType.save_to_file(content, self.destination_file.destination_file_location.resolved_paths[0])
+        JsonFileType.save_to_file(content, Path("/") /  self.destination_file.destination_file_location.substituted_path)
+
 
     def load_config_from_file(file_path:Path, parameters:dict={}):
 
@@ -147,7 +148,7 @@ class BuildConfig():
                 config_dict["DestinationFile"]["DestinationFileLocation"]["Path"],
                 dest_subs
             )
-        )
+        )  
         return BuildConfig(
             source_files=source_files,
             destination_file=dest_file
