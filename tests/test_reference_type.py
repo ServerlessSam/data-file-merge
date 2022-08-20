@@ -1,5 +1,12 @@
-from pantry.reference_types import ContentReferenceType, KeyReferenceType, LiteralReferenceType, ParameterReferenceType, ReferenceTypeFactory
+from pantry.reference_types import (
+    ContentReferenceType,
+    KeyReferenceType,
+    LiteralReferenceType,
+    ParameterReferenceType,
+    ReferenceTypeFactory,
+)
 import pytest
+
 
 class TestLiteralReferenceType:
     def test_literal_reference_type_with_string(self):
@@ -8,9 +15,16 @@ class TestLiteralReferenceType:
     def test_literal_reference_type_with_int(self):
         assert LiteralReferenceType().evaluate(1) == "1"
 
+
 class TestParameterReferenceType:
     def test_parameter_reference_type(self):
-        assert ParameterReferenceType(parameters = {"Key1" : "Value1", "Key2" : "Value2"}).evaluate("Key1") == "Value1"
+        assert (
+            ParameterReferenceType(
+                parameters={"Key1": "Value1", "Key2": "Value2"}
+            ).evaluate("Key1")
+            == "Value1"
+        )
+
 
 class TestReferenceTypeFactory:
     def test_reference_type_factory(self):
