@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
-from pantry.reference_types import BaseReferenceType
 from pathlib import Path
+
+from pantry.reference_types import BaseReferenceType
 
 """
 Synopsis:   A class for handling the preparation of a string substitution.
@@ -34,8 +35,8 @@ Synopsis:   A class for handling the logic for determining a set of file paths.
 Parameters:
     path =  The path string (see pathlib for possible syntax)
     subs =  A dictionary of substitutions to make on the path.
-            Each key is the value to sub for in the path 
-            (so {"key1" : "value1", "key2" : "value2"} will provide substitutions for 
+            Each key is the value to sub for in the path
+            (so {"key1" : "value1", "key2" : "value2"} will provide substitutions for
             "${key1" and "${key2}" in the path string.)
 Additional:
     resolved_paths = A list of pathlib paths that satisfy the file search
@@ -54,8 +55,8 @@ class FileLocation:
         self.resolved_paths = self.resolve()
 
     """
-    Synopsis:   Resolves all substitutions against the path string 
-                then finds all local files matching this path. 
+    Synopsis:   Resolves all substitutions against the path string
+                then finds all local files matching this path.
     Returns:    A list of pathlib paths that satisfy the file search
     """
 

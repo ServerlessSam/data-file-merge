@@ -1,6 +1,5 @@
 from copy import deepcopy
 from dataclasses import dataclass
-from typing import Dict
 
 """
 Synopsis: A base class to merge values into an object in preparation for producing a new json object.
@@ -35,7 +34,7 @@ class BaseJsonMerger:
         raise NotImplementedError
 
     """
-    Synopsis:   Inspects the object to merge in order to determing what merge function to use. Then use said function. 
+    Synopsis:   Inspects the object to merge in order to determing what merge function to use. Then use said function.
                 This should be the primary way of using JSON mergers rather than a specific merge_a_*() function itself.
     Parameters:
         the_obj: The object to merge in.

@@ -1,6 +1,8 @@
-from pantry.regex import RegexExtractor
 from dataclasses import dataclass, field
-from jsonpath_ng import jsonpath, parse
+
+from jsonpath_ng import parse
+
+from pantry.regex import RegexExtractor
 
 """
 Synopsis:   A base class for all reference types to inherit
@@ -17,9 +19,9 @@ class BaseReferenceType:
 
 
 """
-Synopsis:   A class for the 'Parameter' reference type. 
+Synopsis:   A class for the 'Parameter' reference type.
             This will retrieve a given parameter to use as a value.
-Parameters: 
+Parameters:
     parameters = a key-value dictionary of the parameters used when triggering the build/split #TODO we should get these in a better way I think.
 """
 
@@ -41,7 +43,7 @@ class ParameterReferenceType(BaseReferenceType):
 """
 Synopsis:   A class for the 'Content' reference type.
             This will retrieve a string/int from a dict/list using jsonpath.
-Parameters: 
+Parameters:
     file_content = dictionary/list form of a json file
 """
 

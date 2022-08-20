@@ -1,3 +1,5 @@
+import pytest
+
 from pantry.reference_types import (
     ContentReferenceType,
     KeyReferenceType,
@@ -5,7 +7,6 @@ from pantry.reference_types import (
     ParameterReferenceType,
     ReferenceTypeFactory,
 )
-import pytest
 
 
 class TestLiteralReferenceType:

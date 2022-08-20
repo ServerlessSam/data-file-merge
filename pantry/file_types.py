@@ -1,5 +1,5 @@
-from pathlib import Path
 import json
+from pathlib import Path
 
 
 class BaseFileType:
@@ -16,7 +16,7 @@ class BaseFileType:
 class JsonFileType(BaseFileType):
     @classmethod
     def load_from_file(self, file_path: Path):
-        with open(file_path, "r") as loadedFile:
+        with open(file_path) as loadedFile:
             obj = json.load(loadedFile)
         return obj
 

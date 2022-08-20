@@ -174,7 +174,7 @@ class LowerCase(BaseNamingConvention):
 
 
 """
-Synopsis:   A class that will parse a 'NamingConvention' value from a config 
+Synopsis:   A class that will parse a 'NamingConvention' value from a config
             and return the naming convention converting from and to.
 Parameters:
     conversion_string = a string of the form '{convention1}To{convention2}'.
@@ -200,9 +200,9 @@ class ConversionStringParser:
         self.to_convention = parsed_naming_conventions["To"]
 
         """
-        Synopsis:   Splits a 'NamingConvention' string to determing the naming convention 
+        Synopsis:   Splits a 'NamingConvention' string to determing the naming convention
                     to convert from and to.
-        Returns:    a dictionary with 'From' and 'To' keys 
+        Returns:    a dictionary with 'From' and 'To' keys
                     and their values are the corresponding naming convention classes.
         """
 

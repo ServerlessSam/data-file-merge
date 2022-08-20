@@ -1,7 +1,7 @@
 from pantry.naming_conventions import (
+    ConversionStringParser,
     PascalCase,
     SnakeCase,
-    ConversionStringParser,
     StringConverter,
 )
 

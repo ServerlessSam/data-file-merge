@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 """
 Synopsis: a helper class for extracting substrings via regex
-Parameters: 
+Parameters:
     expression =    a regex expression
     capture_group = the intended capture group as an integer or named string to retrieve as the intended substring
 """
@@ -17,7 +17,7 @@ class RegexExtractor:
 
     """
     Synopsis :  executes a regex query and filters for a particular capture group
-    Parameters: 
+    Parameters:
         string_input =  The string to query against via regex
     Returns:    the string found in the desired capture group after running the regex query
     """

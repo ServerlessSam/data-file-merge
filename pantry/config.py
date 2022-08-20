@@ -1,12 +1,12 @@
+from dataclasses import dataclass
 from pathlib import Path
-from weakref import ReferenceType
-from jsonpath_ng import jsonpath, parse
-from pantry.file_types import JsonFileType
-from dataclasses import dataclass, field
-from pantry.reference_types import BaseReferenceType, ReferenceTypeFactory
 
-from pantry.json_merger import *
+from jsonpath_ng import parse
+
 from pantry.file_location import FileLocation, Substitution
+from pantry.file_types import JsonFileType
+from pantry.json_merger import JsonMergerFactory
+from pantry.reference_types import ReferenceTypeFactory
 
 """
 Synopsis:   A class for handling a source file definition for a build.
