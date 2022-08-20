@@ -11,7 +11,7 @@ jsonpath-ng = "*"
 
 [tool.poetry.dev-dependencies]
 pytest = "*"
-black = "==19.10b0"
+black = "==22.6.0"
 #"moto[s3,cloudformation]" = "*"
 autoflake = "*"
 
