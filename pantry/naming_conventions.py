@@ -1,25 +1,24 @@
 import re
 from dataclasses import dataclass
 
-"""
-Synopsis:   The base naming convention class
-Parameters:
-    regex = the rstring to use as part of a conversion (if applicable)
-"""
-
 
 @dataclass
 class BaseNamingConvention:
+    """
+    Synopsis:   The base naming convention class
+    Parameters:
+        regex = the rstring to use as part of a conversion (if applicable)
+    """
+
     regex = None
 
-    """
-    Synopsis:   runs a regex against a string and puts all matches in a lowercase list
-    Parameters:
-        string_to_convert = string to query against
-    Returns:    A list of all the regex matches in lowercase form
-    """
-
     def convert_to_list(self, string_to_convert: str) -> list[str]:
+        """
+        Synopsis:   runs a regex against a string and puts all matches in a lowercase list
+        Parameters:
+            string_to_convert = string to query against
+        Returns:    A list of all the regex matches in lowercase form
+        """
         strings_found = re.findall(self.regex, string_to_convert)
         if not strings_found:
             raise Exception(
@@ -32,25 +31,23 @@ class BaseNamingConvention:
         raise NotImplementedError()
 
 
-"""
-Synopsis:   The naming convention class for pascal case
-Parameters:
-    regex = the rstring to use as part of a conversion. #TODO This regex doesn't enforce pascal from the start of the string. If a string is not pascal to start with, the start is simply not matched. SHOULD FIX.
-"""
-
-
 @dataclass
 class PascalCase(BaseNamingConvention):
+    """
+    Synopsis:   The naming convention class for pascal case
+    Parameters:
+        regex = the rstring to use as part of a conversion. #TODO This regex doesn't enforce pascal from the start of the string. If a string is not pascal to start with, the start is simply not matched. SHOULD FIX.
+    """
+
     regex = r"[A-Z][^A-Z\s]*"
 
-    """
-    Synopsis:   Converts a lowercase list of strings to a single pascal case string
-    Parameters:
-        list_to_convert = a lowercased list of strings
-    Returns:    A single string of pascal case naming convention
-    """
-
     def convert_from_list(self, list_to_convert: list[str]) -> str:
+        """
+        Synopsis:   Converts a lowercase list of strings to a single pascal case string
+        Parameters:
+            list_to_convert = a lowercased list of strings
+        Returns:    A single string of pascal case naming convention
+        """
         to_return = ""
         for word in list_to_convert:
             if not word.islower():
@@ -62,25 +59,23 @@ class PascalCase(BaseNamingConvention):
         return to_return
 
 
-"""
-Synopsis:   The naming convention class for snake case
-Parameters:
-    regex = the rstring to use as part of a conversion. #TODO Improve regex
-"""
-
-
 @dataclass
 class SnakeCase(BaseNamingConvention):
+    """
+    Synopsis:   The naming convention class for snake case
+    Parameters:
+        regex = the rstring to use as part of a conversion. #TODO Improve regex
+    """
+
     regex = r"(?=(?<=^)|(?<=_))[^A-Z\s]*?(?=_|$)"
 
-    """
-    Synopsis:   runs a regex against a string and puts all matches in a lowercase list
-    Parameters:
-        string_to_convert = string to query against
-    Returns:    A list of all the regex matches in lowercase form
-    """
-
     def convert_to_list(self, string_to_convert: str) -> list[str]:
+        """
+        Synopsis:   runs a regex against a string and puts all matches in a lowercase list
+        Parameters:
+            string_to_convert = string to query against
+        Returns:    A list of all the regex matches in lowercase form
+        """
         strings_found = re.findall(self.regex, string_to_convert)
         if not strings_found:
             raise Exception(
@@ -97,14 +92,13 @@ class SnakeCase(BaseNamingConvention):
             raise Exception("String was not split correctly.")
         return strings_found
 
-    """
-    Synopsis:   Converts a lowercase list of strings to a single snake case string
-    Parameters:
-        list_to_convert = a lowercased list of strings
-    Returns:    A single string of snake case naming convention
-    """
-
     def convert_from_list(self, list_to_convert: list[str]) -> str:
+        """
+        Synopsis:   Converts a lowercase list of strings to a single snake case string
+        Parameters:
+            list_to_convert = a lowercased list of strings
+        Returns:    A single string of snake case naming convention
+        """
         for word in list_to_convert:
             if not word.islower():
                 raise Exception(
@@ -113,25 +107,23 @@ class SnakeCase(BaseNamingConvention):
         return "_".join(str(word) for word in list_to_convert)
 
 
-"""
-Synopsis:   The naming convention class for camel case
-Parameters:
-    regex = the rstring to use as part of a conversion. #TODO Improve regex
-"""
-
-
 @dataclass
 class CamelCase(BaseNamingConvention):
+    """
+    Synopsis:   The naming convention class for camel case
+    Parameters:
+        regex = the rstring to use as part of a conversion. #TODO Improve regex
+    """
+
     regex = r"[A-Z][^A-Z\s]*|^[^A-Z\s]*"
 
-    """
-    Synopsis:   Converts a lowercase list of strings to a single camel case string
-    Parameters:
-        list_to_convert = a lowercased list of strings
-    Returns:    A single string of camel case naming convention
-    """
-
     def convert_from_list(self, list_to_convert: list[str]) -> str:
+        """
+        Synopsis:   Converts a lowercase list of strings to a single camel case string
+        Parameters:
+            list_to_convert = a lowercased list of strings
+        Returns:    A single string of camel case naming convention
+        """
         to_return = list_to_convert[0]
 
         for string in list_to_convert[1:]:
@@ -141,13 +133,12 @@ class CamelCase(BaseNamingConvention):
         return to_return
 
 
-"""
-Synopsis:   The naming convention class for upper case
-"""
-
-
 @dataclass
 class UpperCase(BaseNamingConvention):
+    """
+    Synopsis:   The naming convention class for upper case
+    """
+
     def convert_to_list(self, string_to_convert: str) -> list[str]:
         return [string_to_convert.lower()]
 
@@ -157,13 +148,12 @@ class UpperCase(BaseNamingConvention):
             to_return += string.upper()
 
 
-"""
-Synopsis:   The naming convention class for lower case
-"""
-
-
 @dataclass
 class LowerCase(BaseNamingConvention):
+    """
+    Synopsis:   The naming convention class for lower case
+    """
+
     def convert_to_list(self, string_to_convert: str) -> list[str]:
         return [string_to_convert.lower()]
 
@@ -173,17 +163,16 @@ class LowerCase(BaseNamingConvention):
             to_return += string.lower()
 
 
-"""
-Synopsis:   A class that will parse a 'NamingConvention' value from a config
-            and return the naming convention converting from and to.
-Parameters:
-    conversion_string = a string of the form '{convention1}To{convention2}'.
-                        This can be found in config files under the key 'NamingConvention'
-"""
-
-
 @dataclass
 class ConversionStringParser:
+    """
+    Synopsis:   A class that will parse a 'NamingConvention' value from a config
+                and return the naming convention converting from and to.
+    Parameters:
+        conversion_string = a string of the form '{convention1}To{convention2}'.
+                            This can be found in config files under the key 'NamingConvention'
+    """
+
     conversion_string: str
 
     SUPPORTED_CONVENTIONS = {
@@ -199,14 +188,13 @@ class ConversionStringParser:
         self.from_convention = parsed_naming_conventions["From"]
         self.to_convention = parsed_naming_conventions["To"]
 
+    def parse(self):
         """
         Synopsis:   Splits a 'NamingConvention' string to determing the naming convention
                     to convert from and to.
         Returns:    a dictionary with 'From' and 'To' keys
                     and their values are the corresponding naming convention classes.
         """
-
-    def parse(self):
         split_string = self.conversion_string.split("To")
         if len(split_string) != 2:
             raise Exception(
@@ -224,27 +212,25 @@ class ConversionStringParser:
         }
 
 
-"""
-Synopsis:   Converts a string from one naming convention to another
-Parameters:
-    from_convention = The NamingConvention object for converting from
-    to_convention = The NamingConvention object for converting to
-"""
-
-
 @dataclass
 class StringConverter:
-    from_convention: BaseNamingConvention  # TODO should I be useing the base here as the type? I want to be able to use one from a whole group?
-    to_convention: BaseNamingConvention
-
     """
     Synopsis:   Converts a string from one naming convention to another
     Parameters:
-        string_to_convert = the string to convert
-    Returns:    The converted string
+        from_convention = The NamingConvention object for converting from
+        to_convention = The NamingConvention object for converting to
     """
 
+    from_convention: BaseNamingConvention  # TODO should I be useing the base here as the type? I want to be able to use one from a whole group?
+    to_convention: BaseNamingConvention
+
     def convert(self, string_to_convert: str) -> str:
+        """
+        Synopsis:   Converts a string from one naming convention to another
+        Parameters:
+            string_to_convert = the string to convert
+        Returns:    The converted string
+        """
         return self.to_convention.convert_from_list(
             self.from_convention.convert_to_list(string_to_convert)
         )

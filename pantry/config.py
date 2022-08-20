@@ -8,17 +8,17 @@ from pantry.file_types import JsonFileType
 from pantry.json_merger import JsonMergerFactory
 from pantry.reference_types import ReferenceTypeFactory
 
-"""
-Synopsis:   A class for handling a source file definition for a build.
-Parameters:
-    source_file_location = a FileLocation object that provides one or more file locations for the build.
-    source_file_root = the jsonpath to the root node to copy from in each source file found.
-    destination_file_content = the jsonpath to the root node to copy to in the destination file.
-"""
-
 
 @dataclass
 class SourceFile:
+    """
+    Synopsis:   A class for handling a source file definition for a build.
+    Parameters:
+        source_file_location = a FileLocation object that provides one or more file locations for the build.
+        source_file_root = the jsonpath to the root node to copy from in each source file found.
+        destination_file_content = the jsonpath to the root node to copy to in the destination file.
+    """
+
     source_file_location: FileLocation
     source_file_root: str
     destination_file_content: str
@@ -26,13 +26,12 @@ class SourceFile:
     def __post_init__(self):
         self.retreived_src_content = self.retrieve_content()
 
-    """
-    Synopsis:   Retrieves the content (from the specified node downwards)
-                for all files that are found at the specified file location.
-    Returns:    A list of objects that will be merged within the destination file at the specified root node.
-    """
-
-    def retrieve_content(self):
+    def retrieve_content(self) -> list:
+        """
+        Synopsis:   Retrieves the content (from the specified node downwards)
+                    for all files that are found at the specified file location.
+        Returns:    A list of objects that will be merged within the destination file at the specified root node.
+        """
         retrieved_src_content = []
         for src_file in self.source_file_location.resolved_paths:
             src_content = JsonFileType.load_from_file(src_file)
@@ -43,15 +42,14 @@ class SourceFile:
         return retrieved_src_content
 
 
-"""
-Synopsis:   A class for handling the destination file definition for a build.
-Parameters:
-    destination_file_location = a FileLocation object that provides one single file location for the build.
-"""
-
-
 @dataclass
 class DestinationFile:
+    """
+    Synopsis:   A class for handling the destination file definition for a build.
+    Parameters:
+        destination_file_location = a FileLocation object that provides one single file location for the build.
+    """
+
     destination_file_location: FileLocation
 
     def __post_init__(self):
@@ -97,14 +95,13 @@ class BuildConfig:
             and src_files_match
         )
 
-    """
-    Synopsis:   Combines the current state of the desination file with desired source file content
-    Parameters:
-        src = A SourceFile object to be combined at the destination during a build.
-    Returns: The new destination file content. Note the file has not been saved to disk yet.
-    """
-
     def generate_new_dest_content(self) -> dict | list:
+        """
+        Synopsis:   Combines the current state of the desination file with desired source file content
+        Parameters:
+            src = A SourceFile object to be combined at the destination during a build.
+        Returns: The new destination file content. Note the file has not been saved to disk yet.
+        """
         dest_content = self.destination_file.file_content
         for src in self.source_files:
             jsonpath_expr = parse(src.destination_file_content)
@@ -123,7 +120,6 @@ class BuildConfig:
         return dest_content
 
     def write_content(self, content: dict):
-
         # Only current use case is writing a destination file which at the moment uses the substituted path instead of a resolved path.
         # This is because the file to write to can be new so doesn't resolve (hence have empty list for resolved_paths)
         # JsonFileType.save_to_file(content, self.destination_file.destination_file_location.resolved_paths[0])
@@ -133,8 +129,10 @@ class BuildConfig:
             / self.destination_file.destination_file_location.substituted_path,
         )
 
-    def load_config_from_file(file_path: Path, parameters: dict = {}):
-
+    @staticmethod
+    def load_config_from_file(file_path: Path, parameters=None):
+        if parameters is None:
+            parameters = {}
         config_dict = JsonFileType.load_from_file(file_path)
         source_files = []
         for src in config_dict["SourceFiles"]:

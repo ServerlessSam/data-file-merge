@@ -4,13 +4,13 @@ from jsonpath_ng import parse
 
 from pantry.regex import RegexExtractor
 
-"""
-Synopsis:   A base class for all reference types to inherit
-"""
-
 
 @dataclass
 class BaseReferenceType:
+    """
+    Synopsis:   A base class for all reference types to inherit
+    """
+
     parameters: dict = field(default_factory=dict)
     file_content: dict | list = None
 
@@ -18,16 +18,15 @@ class BaseReferenceType:
         raise NotImplementedError()
 
 
-"""
-Synopsis:   A class for the 'Parameter' reference type.
-            This will retrieve a given parameter to use as a value.
-Parameters:
-    parameters = a key-value dictionary of the parameters used when triggering the build/split #TODO we should get these in a better way I think.
-"""
-
-
 @dataclass
 class ParameterReferenceType(BaseReferenceType):
+    """
+    Synopsis:   A class for the 'Parameter' reference type.
+                This will retrieve a given parameter to use as a value.
+    Parameters:
+        parameters = a key-value dictionary of the parameters used when triggering the build/split #TODO we should get these in a better way I think.
+    """
+
     def evaluate(self, value: str, regex: str = None) -> str:
         if value in self.parameters:
             if regex:
@@ -40,27 +39,24 @@ class ParameterReferenceType(BaseReferenceType):
             )
 
 
-"""
-Synopsis:   A class for the 'Content' reference type.
-            This will retrieve a string/int from a dict/list using jsonpath.
-Parameters:
-    file_content = dictionary/list form of a json file
-"""
-
-
 @dataclass
 class ContentReferenceType(BaseReferenceType):
-
     """
-    Synopsis:   Retrieves desired string (or int cast as string) from a dict/list using jsonpath.
-                The result can be filtered using regex.
+    Synopsis:   A class for the 'Content' reference type.
+                This will retrieve a string/int from a dict/list using jsonpath.
     Parameters:
-        value = The jsonpath string to use for object navigation.
-        regex = The regex object to use for further filtering
-    Returns:    The aquired (and possibly filtered) string/int from an original dict/list
+        file_content = dictionary/list form of a json file
     """
 
     def evaluate(self, value: str, regex: RegexExtractor = None) -> str:
+        """
+        Synopsis:   Retrieves desired string (or int cast as string) from a dict/list using jsonpath.
+                    The result can be filtered using regex.
+        Parameters:
+            value = The jsonpath string to use for object navigation.
+            regex = The regex object to use for further filtering
+        Returns:    The aquired (and possibly filtered) string/int from an original dict/list
+        """
         jsonpath_expr = parse(value)
         jsonpath_matches = [
             match.value for match in jsonpath_expr.find(self.file_content)
@@ -80,29 +76,26 @@ class ContentReferenceType(BaseReferenceType):
             return value_in_file
 
 
-"""
-Synopsis:   A class for the "Key" reference type.
-            This will retrieve a key's name using jsonpath
-Parameters:
-    file_content = dictionary/list form of a json file
-"""
-
-
 @dataclass
 class KeyReferenceType(BaseReferenceType):
-
     """
-    Synopsis:   Retrieves desired key's name from a dict/list using jsonpath.
-                The result can be filtered using regex.
+    Synopsis:   A class for the "Key" reference type.
+                This will retrieve a key's name using jsonpath
     Parameters:
-        value = The jsonpath string to use for object navigation.
-                Once resolved, this must produce a dictionary with one key.
-                That one key's name will be retrieved.
-        regex = The regex object to use for further filtering
-    Returns:    The aquired (and possibly filtered) key's name from an original dict/list
+        file_content = dictionary/list form of a json file
     """
 
     def evaluate(self, value: str, regex: str = None) -> str:
+        """
+        Synopsis:   Retrieves desired key's name from a dict/list using jsonpath.
+                    The result can be filtered using regex.
+        Parameters:
+            value = The jsonpath string to use for object navigation.
+                    Once resolved, this must produce a dictionary with one key.
+                    That one key's name will be retrieved.
+            regex = The regex object to use for further filtering
+        Returns:    The aquired (and possibly filtered) key's name from an original dict/list
+        """
         jsonpath_expr = parse(value)
         jsonpath_matches = [
             match.value for match in jsonpath_expr.find(self.file_content)
@@ -118,22 +111,19 @@ class KeyReferenceType(BaseReferenceType):
             return key_in_file
 
 
-"""
-Synopsis:   A class for the "Literal" reference type
-            This will blindly use the string given as the value.
-"""
-
-
 @dataclass
 class LiteralReferenceType(BaseReferenceType):
-
     """
-    Synopsis:   Blindly returns a string value
-    Parameters:
-        value = The string to blindly return
+    Synopsis:   A class for the "Literal" reference type
+                This will blindly use the string given as the value.
     """
 
     def evaluate(self, value: str, regex: str = None) -> str:
+        """
+        Synopsis:   Blindly returns a string value
+        Parameters:
+            value = The string to blindly return
+        """
         if regex:
             return regex.resolve(str(value))
         else:
