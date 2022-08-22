@@ -2,7 +2,7 @@
 
 Project Synopsis:
     This python module will merge multiple source files into one destination file.
-    
+
 Considerations:
 - Currently only JSON files are supported but YAML files could be supported with ease in future.
 - Doing the reverse operation will soon be supported (splitting a single sourcefile into multiple destination files).
@@ -61,7 +61,7 @@ File Location:
         }
 
 Relative Path:
-    Type: 
+    Type:
         Str
     Synopsis:
         A pointer to one or more local files.
@@ -86,7 +86,7 @@ Substitution Type:
     Synopsis:
         Defines the type of substitution to perform.
     Details:
-        Can be one of the following: 
+        Can be one of the following:
             - "Literal":
                 Will be substituting for the literal value given as <<SubstitutionValue>>.
             - "Parameter":
@@ -146,3 +146,8 @@ Destination File Content:
         The node in the destination file to use as the root node for merging to.
     Details:
         It adheres to json-path dollar-notation syntax. It must point to a single key; or "$" which will be the root of the file itself. The key doesn't need to neccessarily exist beforehand. But if it does exist, it's value must be an empty list/dict or null. It will not overwrite existing values.
+
+# Development
+
+- install pre-commit hooks: ``poetry run pre-commit install``
+- check and fix linting issues: ``make lint``
