@@ -1,9 +1,9 @@
 from pathlib import Path
 
-from pantry.config import BuildConfig, DestinationFile, SourceFile
-from pantry.file_location import FileLocation, Substitution
-from pantry.file_types import JsonFileType
-from pantry.reference_types import (
+from src.config import BuildConfig, DestinationFile, SourceFile
+from src.file_location import FileLocation, Substitution
+from src.file_types import JsonFileType
+from src.reference_types import (
     ContentReferenceType,
     KeyReferenceType,
     LiteralReferenceType,

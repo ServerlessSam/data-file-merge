@@ -1,6 +1,6 @@
 import pytest
 
-from pantry.regex import RegexExtractor
+from src.regex import RegexExtractor
 
 
 class TestRegexExtractor:

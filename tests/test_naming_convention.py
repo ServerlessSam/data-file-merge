@@ -1,4 +1,4 @@
-from pantry.naming_conventions import (
+from src.naming_conventions import (
     ConversionStringParser,
     PascalCase,
     SnakeCase,

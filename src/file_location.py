@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from pantry.reference_types import BaseReferenceType
+from src.reference_types import BaseReferenceType
 
 
 @dataclass
