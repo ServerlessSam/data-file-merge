@@ -1,4 +1,4 @@
-# config-seperation
+# data-file-merge
 
 Project Synopsis:
     This python module will merge multiple source files into one destination file.
