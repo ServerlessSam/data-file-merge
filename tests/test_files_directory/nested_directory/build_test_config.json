@@ -2,7 +2,7 @@
     "SourceFiles" : [
         {
             "SourceFileLocation" : {
-                "Path" : "../config-seperation/tests/test_files_directory/nested_directory/nested_${Sub1}_file_1.json",
+                "Path" : "../data-file-merge/tests/test_files_directory/nested_directory/nested_${Sub1}_file_1.json",
                 "PathSubs" : {
                     "Sub1" : {
                         "Type" : "Parameter",
@@ -15,7 +15,7 @@
         },
         {
             "SourceFileLocation" : {
-                "Path" : "../config-seperation/tests/test_files_directory/nested_directory/nested_${Sub1}_file_2.json",
+                "Path" : "../data-file-merge/tests/test_files_directory/nested_directory/nested_${Sub1}_file_2.json",
                 "PathSubs" : {
                     "Sub1" : {
                         "Type" : "Literal",
@@ -29,7 +29,7 @@
     ],
     "DestinationFile" : {
         "DestinationFileLocation" : {
-            "Path" : "Users/samuellock/Documents/GitHub/../config-seperation/tests/test_files_directory/nested_directory/build_test_merged_file.json",
+            "Path" : "Users/samuellock/Documents/GitHub/../data-file-merge/tests/test_files_directory/nested_directory/build_test_merged_file.json",
             "PathSubs" : {}
         }
     }

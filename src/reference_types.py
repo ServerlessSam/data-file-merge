@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 
 from jsonpath_ng import parse
 
-from pantry.regex import RegexExtractor
+from src.regex import RegexExtractor
 
 
 @dataclass

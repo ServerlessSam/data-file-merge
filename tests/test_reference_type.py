@@ -1,6 +1,6 @@
 import pytest
 
-from pantry.reference_types import (
+from src.reference_types import (
     ContentReferenceType,
     KeyReferenceType,
     LiteralReferenceType,

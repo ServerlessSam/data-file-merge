@@ -3,10 +3,10 @@ from pathlib import Path
 
 from jsonpath_ng import parse
 
-from pantry.file_location import FileLocation, Substitution
-from pantry.file_types import JsonFileType
-from pantry.json_merger import JsonMergerFactory
-from pantry.reference_types import ReferenceTypeFactory
+from src.file_location import FileLocation, Substitution
+from src.file_types import JsonFileType
+from src.json_merger import JsonMergerFactory
+from src.reference_types import ReferenceTypeFactory
 
 
 @dataclass
