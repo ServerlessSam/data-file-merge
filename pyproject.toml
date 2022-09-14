@@ -8,6 +8,7 @@ authors = ["ServerlessSam"]
 python = "3.10.*"
 boto3 = "*"
 jsonpath-ng = "*"
+pyinstaller = "^5.3"
 
 [tool.poetry.dev-dependencies]
 pytest = "*"
