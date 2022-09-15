@@ -29,6 +29,7 @@ Available options are:
 def main():
 
     parser = argparse.ArgumentParser(description='Merge files into a single file based on the rules defined in a config file.')
+    parser.add_argument('action', choices=["merge", "split"])
     parser.add_argument('config_file_path', type=str, help='The complete local path to the data-file-merge config file.')
     parser.add_argument("-p", '--parameters', type=str, help='Key value pairs of parameters. E.g "Key1=Value1,Key2=Value2..."')
     args = parser.parse_args()
@@ -40,8 +41,12 @@ def main():
     else:
         parameters = None
     
-    cfg = BuildConfig.load_config_from_file(args.config_file_path, parameters)
-    cfg.build()
+    if args.action == "merge":
+        cfg = BuildConfig.load_config_from_file(args.config_file_path, parameters)
+        cfg.build()
+
+    elif args.action == "split":
+        raise NotImplemented("Splitting has not been implimented for data-file-merge ... yet.")
 
 if __name__ == '__main__':
     main()
