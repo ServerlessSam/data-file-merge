@@ -7,6 +7,7 @@ from src.file_location import FileLocation, Substitution
 from src.file_types import JsonFileType
 from src.json_merger import JsonMergerFactory
 from src.reference_types import ReferenceTypeFactory
+from src.regex import RegexExtractor
 
 
 @dataclass
@@ -108,15 +109,18 @@ class BuildConfig:
             dest_content_matches = [
                 match.value for match in jsonpath_expr.find(dest_content)
             ]
+            if dest_content_matches == []: 
+                dest_content_matches = [None]
             for destination_match in dest_content_matches:
-                dest_json_merger = JsonMergerFactory(
-                    destination_match
-                ).generate_json_merger()
                 for src_content in src.retreived_src_content:
+                    dest_json_merger = JsonMergerFactory(
+                        destination_match
+                    ).generate_json_merger()
                     dest_json_merger.merge_obj(src_content)
-                dest_content = jsonpath_expr.update_or_create(
-                    dest_content, dest_json_merger.json_obj
-                )
+                    destination_match = dest_json_merger.json_obj
+                    dest_content = jsonpath_expr.update_or_create(
+                        dest_content, dest_json_merger.json_obj
+                    )
         return dest_content
 
     def write_content(self, content: dict):
@@ -137,16 +141,17 @@ class BuildConfig:
         source_files = []
         for src in config_dict["SourceFiles"]:
             subs = {}
-            for sub_key, sub_dict in src["SourceFileLocation"]["PathSubs"].items():
-                reference_type = ReferenceTypeFactory(sub_dict["Type"]).generate()
-                regex = sub_dict["Regex"] if "Regex" in sub_dict else None
-                subs[sub_key] = Substitution(
-                    reference_type(
-                        parameters, None  # TODO support reading from content
-                    ),
-                    sub_dict["Value"],
-                    regex,
-                )
+            if "PathSubs" in src["SourceFileLocation"]:
+                for sub_key, sub_dict in src["SourceFileLocation"]["PathSubs"].items():
+                    reference_type = ReferenceTypeFactory(sub_dict["Type"]).generate()
+                    regex = RegexExtractor.parse_from_sub_dict(sub_dict)
+                    subs[sub_key] = Substitution(
+                        reference_type(
+                            parameters, None  # TODO support reading from content
+                        ),
+                        sub_dict["Value"],
+                        regex,
+                    )
             source_files.append(
                 SourceFile(
                     FileLocation(src["SourceFileLocation"]["Path"], subs),
@@ -155,16 +160,17 @@ class BuildConfig:
                 )
             )
         dest_subs = {}
-        for sub_key, sub_dict in config_dict["DestinationFile"][
-            "DestinationFileLocation"
-        ]["PathSubs"].items():
-            reference_type = ReferenceTypeFactory(sub_dict["Type"]).generate()
-            regex = sub_dict["Regex"] if "Regex" in sub_dict else None
-            dest_subs[sub_key] = Substitution(
-                reference_type(parameters, None),  # TODO support reading from content
-                sub_dict["Value"],
-                regex,
-            )
+        if "PathSubs" in config_dict["DestinationFile"]["DestinationFileLocation"]:
+            for sub_key, sub_dict in config_dict["DestinationFile"][
+                "DestinationFileLocation"
+            ]["PathSubs"].items():
+                reference_type = ReferenceTypeFactory(sub_dict["Type"]).generate()
+                regex = RegexExtractor.parse_from_sub_dict(sub_dict)
+                dest_subs[sub_key] = Substitution(
+                    reference_type(parameters, None),  # TODO support reading from content
+                    sub_dict["Value"],
+                    regex,
+                )
         dest_file = DestinationFile(
             FileLocation(
                 config_dict["DestinationFile"]["DestinationFileLocation"]["Path"],

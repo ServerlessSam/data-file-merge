@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from src.reference_types import BaseReferenceType
+from src.regex import RegexExtractor
 
 
 @dataclass
@@ -17,7 +18,7 @@ class Substitution:
 
     reference_type: BaseReferenceType  # TODO is this right? I want it to be any reference type so I've set the type to the base which they all inherit?
     value: str
-    regex: str = None
+    regex: RegexExtractor = None
 
     def evaluate(self) -> str:
         """

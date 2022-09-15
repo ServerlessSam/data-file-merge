@@ -85,7 +85,7 @@ class KeyReferenceType(BaseReferenceType):
         file_content = dictionary/list form of a json file
     """
 
-    def evaluate(self, value: str, regex: str = None) -> str:
+    def evaluate(self, value: str, regex: RegexExtractor = None) -> str:
         """
         Synopsis:   Retrieves desired key's name from a dict/list using jsonpath.
                     The result can be filtered using regex.
@@ -118,7 +118,7 @@ class LiteralReferenceType(BaseReferenceType):
                 This will blindly use the string given as the value.
     """
 
-    def evaluate(self, value: str, regex: str = None) -> str:
+    def evaluate(self, value: str, regex: RegexExtractor = None) -> str:
         """
         Synopsis:   Blindly returns a string value
         Parameters:
