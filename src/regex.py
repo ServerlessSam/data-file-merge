@@ -27,3 +27,11 @@ class RegexExtractor:
             raise Exception("No match was found in regex.")
         else:
             return match.group(self.capture_group)
+
+    @staticmethod
+    def parse_from_sub_dict(sub_dict:dict):
+        regex = RegexExtractor(
+            sub_dict["Regex"]["Expression"], 
+            sub_dict["Regex"]["CaptureGroup"]
+        ) if "Regex" in sub_dict else None
+        return regex

@@ -1,5 +1,6 @@
-from copy import deepcopy
+from copy import copy, deepcopy
 from dataclasses import dataclass
+from types import NoneType
 
 
 @dataclass
@@ -17,19 +18,29 @@ class BaseJsonMerger:
             (int, self.merge_an_int),
             (dict, self.merge_a_dict),
             (str, self.merge_a_str),
+            (NoneType, self.merge_a_none)
         )
 
+    # These merging methods are overridden in specific typed merger JsonMerger classes where appropiate.
+    # The default behaviour is to convert the value at the node into a list and append it with the value to merge in.
+    3
     def merge_a_list(self, the_list: list):
-        raise NotImplementedError
+        self.json_obj = self.json_obj + (the_list)
 
     def merge_an_int(self, the_int: int):
-        raise NotImplementedError
+        self.json_obj = [self.json_obj]
+        self.json_obj.append(the_int)
 
     def merge_a_dict(self, the_dict: dict):
-        raise NotImplementedError
+        self.json_obj = [self.json_obj]
+        self.json_obj.append(the_dict)
 
     def merge_a_str(self, the_str: str):
-        raise NotImplementedError
+        self.json_obj = [self.json_obj]
+        self.json_obj.append(the_str)
+
+    def merge_a_none(self, the_none:NoneType):
+        pass
 
     def merge_obj(self, the_obj: list | int | dict | str):
         """
@@ -46,7 +57,7 @@ class BaseJsonMerger:
             f"Json object for merging was not one of the 4 expected types (list, int, dict, str). Instead it was {str(type(the_obj))}"
         )
 
-
+@dataclass
 class ListJsonMerger(BaseJsonMerger):
     """
     Synopsis: A class for merging into a list object
@@ -64,30 +75,14 @@ class ListJsonMerger(BaseJsonMerger):
         """
         self.json_obj += the_list
 
-    def merge_an_int(self, the_int: int) -> list:
-        """
-        Synopsis: Appends the list with a new element, being the integer. E.g [A,B]+1=[A,B,1]
-        Parameters:
-            the_int: The integer to merge in.
-        """
+    def merge_an_int(self, the_int: int):
         self.json_obj.append(the_int)
 
-    def merge_a_dict(self, the_dict: dict) -> list:
-        """
-        Synopsis: Appends the list with a new element, being the dictionary. E.g [A,B]+{foo:bar}=[A,B,{foo:bar}]
-        Parameters:
-            the_dict The dictionary to merge in.
-        """
+    def merge_a_dict(self, the_dict: dict):
         self.json_obj.append(the_dict)
 
-    def merge_a_str(self, the_str: str) -> list:
-        """
-        Synopsis: Appends the list with a new element, being the string. E.g [A,B]+"foo"=[A,B,"foo"]
-        Parameters:
-            the_str: The string to merge in.
-        """
+    def merge_a_str(self, the_str: str):
         self.json_obj.append(the_str)
-
 
 @dataclass
 class IntJsonMerger(BaseJsonMerger):
@@ -99,14 +94,6 @@ class IntJsonMerger(BaseJsonMerger):
 
     json_obj: int
 
-    def merge_a_list(self, the_list: list):
-        """
-        Synopsis: Ensures an exception is throw when trying to merge a list into an int.
-        Parameters:
-            the_list: The original list to merge into.
-        """
-        raise Exception("Cannot merge a list into an int.")
-
     def merge_an_int(self, the_int: int) -> int:
         """
         Synopsis: Sums the original integer with the_int.
@@ -114,23 +101,6 @@ class IntJsonMerger(BaseJsonMerger):
             the_int: The integer to merge in.
         """
         self.json_obj += the_int
-
-    def merge_a_dict(self, the_dict: dict):
-        """
-        Synopsis: Ensures an exception is throw when trying to merge a dict into an int.
-        Parameters:
-            the_dict: The dictionary to merge in.
-        """
-        raise Exception("Cannot merge a dict into an int.")
-
-    def merge_a_str(self, the_str: str):
-        """
-        Synopsis: Ensures an exception is throw when trying to merge a str into an int.
-        Parameters:
-            the_str: The string to merge in.
-        """
-        raise Exception("Cannot merge a str into an int.")
-
 
 @dataclass
 class DictJsonMerger(BaseJsonMerger):
@@ -141,22 +111,6 @@ class DictJsonMerger(BaseJsonMerger):
     """
 
     json_obj: dict
-
-    def merge_a_list(self, the_list: list):
-        """
-        Synopsis: Ensures an exception is throw when trying to merge a list into a dict.
-        Parameters:
-            the_list: The list to merge in.
-        """
-        raise Exception("Cannot merge a list into a dict.")
-
-    def merge_an_int(self, the_int: int):
-        """
-        Synopsis: Ensures an exception is throw when trying to merge an int into a dict.
-        Parameters:
-            the_int: The integer to merge in.
-        """
-        raise Exception("Cannot merge an int into a dict.")
 
     def merge_a_dict(self, the_dict: dict) -> dict:
         """
@@ -171,15 +125,6 @@ class DictJsonMerger(BaseJsonMerger):
         json_obj_copy = deepcopy(self.json_obj)
         self.json_obj = json_obj_copy | the_dict
 
-    def merge_a_str(self, the_str: str):
-        """
-        Synopsis: Ensures an exception is throw when trying to merge a str into a dict.
-        Parameters:
-            the_str: The string to merge in.
-        """
-        raise Exception("Cannot merge a str into a dict.")
-
-
 @dataclass
 class StrJsonMerger(BaseJsonMerger):
     """
@@ -190,37 +135,48 @@ class StrJsonMerger(BaseJsonMerger):
 
     json_obj: str
 
+@dataclass
+class NoneJsonMerger(BaseJsonMerger):
+    """
+    Synopsis: A class for merging into None.
+    Parameters:
+        json_obj: The string to merge into. (Should be 'None')
+    """
+
+    json_obj: NoneType
+
     def merge_a_list(self, the_list: list):
         """
-        Synopsis: Ensures an exception is throw when trying to merge a list into a string.
+        Synopsis: Replaces the NoneType object with the list.
         Parameters:
             the_list: The list to merge in.
         """
-        raise Exception("Cannot merge a list into a str.")
+        self.json_obj = the_list
 
     def merge_an_int(self, the_int: int):
         """
-        Synopsis: Ensures an exception is throw when trying to merge an int into a string.
+        Synopsis: Replaces the NoneType object with the int.
         Parameters:
             the_int: The int to merge in.
         """
-        raise Exception("Cannot merge an int into a str.")
+        self.json_obj = the_int
 
     def merge_a_dict(self, the_dict: dict) -> dict:
         """
-        Synopsis: Ensures an exception is throw when trying to merge a dict into a string.
+        Synopsis: Replaces the NoneType object with the dict.
         Parameters:
             the_dict: The dict to merge in.
         """
-        raise Exception("Cannot merge a dict into a str.")
+        self.json_obj = the_dict
 
     def merge_a_str(self, the_str: str):
         """
-        Synopsis: Appends the_str to the end of json_obj, as part of a merge.
+        Synopsis: Replaces the NoneType object with the string.
         Parameters:
             the_str: The str to merge in.
         """
-        self.json_obj += the_str
+        self.json_obj = the_str
+
 
 
 @dataclass
@@ -232,12 +188,12 @@ class JsonMergerFactory:
     Returns: An initialised JsonMerger object of the correct type.
     """
 
-    json_to_merge_into: list | int | dict | str
+    json_to_merge_into: list | int | dict | str | NoneType
 
     def generate_json_merger(self):
         for obj_type, type_merger in zip(
-            [list, int, dict, str],
-            [ListJsonMerger, IntJsonMerger, DictJsonMerger, StrJsonMerger],
+            [list, int, dict, str, NoneType],
+            [ListJsonMerger, IntJsonMerger, DictJsonMerger, StrJsonMerger, NoneJsonMerger],
         ):
             if type(self.json_to_merge_into) == obj_type:
                 return type_merger(self.json_to_merge_into)
