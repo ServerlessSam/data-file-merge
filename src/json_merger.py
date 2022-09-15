@@ -76,12 +76,27 @@ class ListJsonMerger(BaseJsonMerger):
         self.json_obj += the_list
 
     def merge_an_int(self, the_int: int):
+        """
+        Synopsis: Appends the list with the integer.
+        Parameters:
+            the_int: The int to merge in.
+        """
         self.json_obj.append(the_int)
 
     def merge_a_dict(self, the_dict: dict):
+        """
+        Synopsis: Appends the list with the dictionary.
+        Parameters:
+            the_dict: The dict to merge in.
+        """
         self.json_obj.append(the_dict)
 
     def merge_a_str(self, the_str: str):
+        """
+        Synopsis: Appends the list with the string.
+        Parameters:
+            the_str: The str to merge in.
+        """
         self.json_obj.append(the_str)
 
 @dataclass
