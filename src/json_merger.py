@@ -1,4 +1,4 @@
-from copy import copy, deepcopy
+from copy import deepcopy
 from dataclasses import dataclass
 from types import NoneType
 
