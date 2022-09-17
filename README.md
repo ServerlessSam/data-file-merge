@@ -2,7 +2,7 @@
 
 This python module allows you to merge multiple JSON files into a single destination JSON file using a set of rules defined in the [dfm config file](https://github.com/ServerlessSam/data-file-merge/wiki/Configuration)
 
-Please refer to the [project wiki](https://github.com/ServerlessSam/data-file-merge/wiki) for complete documentation including how [usage](https://github.com/ServerlessSam/data-file-merge/wiki/Usage) and [configuration file syntax](https://github.com/ServerlessSam/data-file-merge/wiki/Configuration).
+Please refer to the [project wiki](https://github.com/ServerlessSam/data-file-merge/wiki) for complete documentation including [usage](https://github.com/ServerlessSam/data-file-merge/wiki/Usage) and [configuration file syntax](https://github.com/ServerlessSam/data-file-merge/wiki/Configuration).
 
 ## Considerations
 
