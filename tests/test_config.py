@@ -163,7 +163,6 @@ class TestConfigs:
     """
     Commenting out the following test because we still need to include full paths in FileLocation in config files (minus the prefix '/').
     This causes a problem because running unit tests locally vs running them in CI/CD will need the paths to be entirely different.
-    
     TODO Re-add this test once we complete https://github.com/ServerlessSam/data-file-merge/issues/10
     """
     # def test_config_load(self):
