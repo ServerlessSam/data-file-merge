@@ -2,7 +2,7 @@ version: 2.1
 orbs:
   python: circleci/python@2.1.1
 jobs:
-  lint:
+  format:
     docker:
       - image: cimg/python:3.10
     steps:
@@ -11,7 +11,7 @@ jobs:
          pkg-manager: poetry
       - run:
          name: Format Checking
-         command: poetry run make lint-check
+         command: poetry run make format-check
   test:
     docker:
       - image: cimg/python:3.10
@@ -25,5 +25,5 @@ jobs:
 workflows:
   lint-and-test:
     jobs:
-      - lint
+      - format
       - test
