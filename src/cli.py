@@ -1,7 +1,9 @@
-from src.config import BuildConfig
 import argparse
 
-def parse_parameter_string(param_str:str) -> dict:
+from src.config import BuildConfig
+
+
+def parse_parameter_string(param_str: str) -> dict:
     dict_to_return = {}
     key_value_pairs = param_str.split(",")
 
@@ -13,8 +15,9 @@ def parse_parameter_string(param_str:str) -> dict:
         if key in dict_to_return:
             raise Exception(f"Parameter with key '{key}' already exists!")
         dict_to_return[key] = value
-    
+
     return dict_to_return
+
 
 """
 Usage:
@@ -26,12 +29,25 @@ Available options are:
 --------
 - data-file-merge v0.1.0
 """
+
+
 def main():
 
-    parser = argparse.ArgumentParser(description='Merge files into a single file based on the rules defined in a config file.')
-    parser.add_argument('action', choices=["merge", "split"])
-    parser.add_argument('config_file_path', type=str, help='The complete local path to the data-file-merge config file.')
-    parser.add_argument("-p", '--parameters', type=str, help='Key value pairs of parameters. E.g "Key1=Value1,Key2=Value2..."')
+    parser = argparse.ArgumentParser(
+        description="Merge files into a single file based on the rules defined in a config file."
+    )
+    parser.add_argument("action", choices=["merge", "split"])
+    parser.add_argument(
+        "config_file_path",
+        type=str,
+        help="The complete local path to the data-file-merge config file.",
+    )
+    parser.add_argument(
+        "-p",
+        "--parameters",
+        type=str,
+        help='Key value pairs of parameters. E.g "Key1=Value1,Key2=Value2..."',
+    )
     args = parser.parse_args()
     print(args)
 
@@ -40,13 +56,16 @@ def main():
         parameters = parse_parameter_string(args.parameters)
     else:
         parameters = None
-    
+
     if args.action == "merge":
         cfg = BuildConfig.load_config_from_file(args.config_file_path, parameters)
         cfg.build()
 
     elif args.action == "split":
-        raise NotImplemented("Splitting has not been implimented for data-file-merge ... yet.")
+        raise NotImplementedError(
+            "Splitting has not been implimented for data-file-merge ... yet."
+        )
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

@@ -109,7 +109,7 @@ class BuildConfig:
             dest_content_matches = [
                 match.value for match in jsonpath_expr.find(dest_content)
             ]
-            if dest_content_matches == []: 
+            if dest_content_matches == []:
                 dest_content_matches = [None]
             for destination_match in dest_content_matches:
                 for src_content in src.retreived_src_content:
@@ -167,7 +167,9 @@ class BuildConfig:
                 reference_type = ReferenceTypeFactory(sub_dict["Type"]).generate()
                 regex = RegexExtractor.parse_from_sub_dict(sub_dict)
                 dest_subs[sub_key] = Substitution(
-                    reference_type(parameters, None),  # TODO support reading from content
+                    reference_type(
+                        parameters, None
+                    ),  # TODO support reading from content
                     sub_dict["Value"],
                     regex,
                 )
