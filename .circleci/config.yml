@@ -57,10 +57,10 @@ workflows:
   create-cli:
     jobs:
       - create-cli-unix:
-        filters:
-          branches:
-            only: main
+          filters:
+            branches:
+              only: main2
       - create-cli-windows:
-        filters:
-          branches:
-            only: main
+          filters:
+            branches:
+              only: main2
