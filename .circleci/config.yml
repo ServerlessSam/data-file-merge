@@ -31,7 +31,7 @@ jobs:
           name: Install poetry
           shell: cmd.exe
           command: |
-            curl -sSL https://install.python-poetry.org | python3 -
+            curl -sSL https://install.python-poetry.org | python -
             poetry install
       - run:
           name: Create CLI
