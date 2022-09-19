@@ -23,19 +23,6 @@ jobs:
       - run:
          name: Run tests
          command: poetry run pytest
-  create-cli-unix:
-    docker:
-      - image: cimg/python:3.10
-    steps:
-      - checkout
-      - python/install-packages:
-         pkg-manager: poetry
-      - run:
-        name: Create CLI
-        command: poetry run pyinstaller src/cli.py --onefile --name dfm
-       - store_artifacts:
-        path: dist/dfm
-        destination: cli-unix
   create-cli-windows:
     executor: win/default
     steps:
@@ -52,6 +39,19 @@ jobs:
       - store_artifacts:
           path: dist/dfm
           destination: cli-windows
+  create-cli-unix:
+    docker:
+      - image: cimg/python:3.10
+    steps:
+      - checkout
+      - python/install-packages:
+         pkg-manager: poetry
+      - run:
+        name: Create CLI
+        command: poetry run pyinstaller src/cli.py --onefile --name dfm
+       - store_artifacts:
+        path: dist/dfm
+        destination: cli-unix
 
 workflows:
   lint-and-test:
