@@ -54,5 +54,11 @@ workflows:
     jobs:
       - format
       - test
-      - create-cli-unix
-      - create-cli-windows
+
+  create-cli:
+    filters:
+      branches:
+        only:
+          - main
+    - create-cli-unix
+    - create-cli-windows
