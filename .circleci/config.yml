@@ -49,7 +49,7 @@ jobs:
       - run:
         name: Create CLI
         command: poetry run pyinstaller src/cli.py --onefile --name dfm
-       - store_artifacts:
+      - store_artifacts:
         path: dist/dfm
         destination: cli-unix
 
