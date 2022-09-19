@@ -32,8 +32,8 @@ jobs:
           shell: cmd.exe
           command: |
             curl -sSL https://install.python-poetry.org | python -
-            /c/Users/circleci.PACKER-631B74C9/Application\ Data/pypoetry/venv/Scripts/poetry install
-            /c/Users/circleci.PACKER-631B74C9/Application\ Data/pypoetry/venv/Scripts/poetry run pyinstaller src/cli.py --onefile --name dfm
+            "/Users/circleci.PACKER-631B74C9/Application Data/pypoetry/venv/Scripts/poetry" install 
+            "/Users/circleci.PACKER-631B74C9/Application Data/pypoetry/venv/Scripts/poetry" run pyinstaller src/cli.py --onefile --name dfm
       - store_artifacts:
           path: dist/dfm
           destination: cli-windows
