@@ -35,6 +35,7 @@ jobs:
           poetry install
       - run:
           name: Create CLI
+          shell: cmd.exe
           command: poetry run pyinstaller src/cli.py --onefile --name dfm
       - store_artifacts:
           path: dist/dfm
