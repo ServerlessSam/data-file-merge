@@ -16,4 +16,4 @@ Please refer to the [project wiki](https://github.com/ServerlessSam/data-file-me
 ## Development
 
 * install pre-commit hooks: ``poetry run pre-commit install``
-* check and fix linting issues: ``make lint``
+* check and fix linting issues: ``make format``
