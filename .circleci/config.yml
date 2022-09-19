@@ -28,15 +28,11 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install Poetry
+          name: Build Windows CLI
           shell: cmd.exe
           command: |
             curl -sSL https://install.python-poetry.org | python -
             set PATH=%PATH%;/Users/circleci.PACKER-631B74C9/Application Data/pypoetry/venv/Scripts
-      - run:
-          name: Build Windows CLI
-          shell: cmd.exe
-          command: |
             poetry install 
             poetry run pyinstaller src/cli.py --onefile --name dfm
       - store_artifacts:
