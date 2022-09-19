@@ -28,11 +28,11 @@ jobs:
     steps:
       - checkout
       - run:
-        name: Install poetry
-        shell: cmd.exe
-        command: |
-          curl -sSL https://install.python-poetry.org | python3 -
-          poetry install
+          name: Install poetry
+          shell: cmd.exe
+          command: |
+            curl -sSL https://install.python-poetry.org | python3 -
+            poetry install
       - run:
           name: Create CLI
           shell: cmd.exe
