@@ -59,8 +59,8 @@ workflows:
       - create-cli-unix:
           filters:
             branches:
-              only: main2
+              only: main
       - create-cli-windows:
           filters:
             branches:
-              only: main2
+              only: main
