@@ -1,6 +1,7 @@
 version: 2.1
 orbs:
   python: circleci/python@2.1.1
+  win: circleci/windows@5.0
 jobs:
   format:
     docker:
@@ -22,8 +23,40 @@ jobs:
       - run:
          name: Run tests
          command: poetry run pytest
+  create-cli-unix:
+    docker:
+      - image: cimg/python:3.10
+    steps:
+      - checkout
+      - python/install-packages:
+         pkg-manager: poetry
+      - run:
+        name: Create CLI
+        command: poetry run pyinstaller src/cli.py --onefile --name dfm
+       - store_artifacts:
+        path: dist/dfm
+        destination: cli-unix
+  create-cli-windows:
+    executor: win/default
+    steps:
+      - checkout
+      - run:
+        name: Install poetry
+        shell: cmd.exe
+        command: |
+          curl -sSL https://install.python-poetry.org | python3 -
+          poetry install
+      - run:
+        name: Create CLI
+        command: poetry run pyinstaller src/cli.py --onefile --name dfm
+      - store_artifacts:
+          path: dist/dfm
+          destination: cli-windows
+
 workflows:
   lint-and-test:
     jobs:
       - format
       - test
+      - create-cli-unix
+      - create-cli-windows
