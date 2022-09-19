@@ -31,7 +31,7 @@ jobs:
           name: Build Windows CLI
           shell: cmd.exe
           command: |
-            curl -sSL https://install.python-poetry.org | python - && set PATH=%PATH%;C:\Users\circleci.PACKER-631B74C9\AppData\Roaming\Python\Scripts && poetry install && poetry run pyinstaller src/cli.py --onefile --name dfm
+            curl -sSL https://install.python-poetry.org | python - && C:\Users\circleci.PACKER-631B74C9\AppData\Roaming\Python\Scripts\poetry install && C:\Users\circleci.PACKER-631B74C9\AppData\Roaming\Python\Scripts\poetry run pyinstaller src/cli.py --onefile --name dfm
       - store_artifacts:
           path: dist/dfm.exe
           destination: cli-windows
