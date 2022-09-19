@@ -56,12 +56,13 @@ workflows:
       - test
 
   create-cli:
-    - create-cli-unix
+    jobs:
+      - create-cli-unix:
         filters:
           branches:
             only:
               - main
-    - create-cli-windows
+      - create-cli-windows:
         filters:
           branches:
             only:
