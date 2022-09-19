@@ -56,9 +56,13 @@ workflows:
       - test
 
   create-cli:
-    filters:
-      branches:
-        only:
-          - main
     - create-cli-unix
+      filters:
+        branches:
+          only:
+            - main
     - create-cli-windows
+      filters:
+        branches:
+          only:
+            - main
