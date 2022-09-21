@@ -2,6 +2,7 @@ version: 2.1
 orbs:
   python: circleci/python@2.1.1
   win: circleci/windows@5.0
+  macos: circleci/macos@2
 jobs:
   format:
     docker:
@@ -48,6 +49,22 @@ jobs:
       - store_artifacts:
           path: dist/dfm
           destination: cli-unix
+    create-cli-mac:
+      macos:
+        xcode: 13.4.1
+      resource_class: medium
+      steps:
+        - checkout
+        - run:
+            name: Build Mac CLI
+            command: |
+              curl -sSL https://install.python-poetry.org | python -
+              poetry install
+              poetry run pyinstaller src/cli.py --onefile --name dfm
+        - store_artifacts:
+          path: dist/dfm
+          destination: cli-mac     
+
 
 workflows:
   lint-and-test:
