@@ -59,6 +59,8 @@ jobs:
           name: Build Mac CLI
           command: |
             curl -sSL https://install.python-poetry.org | python3 -
+            export HOMEBREW_NO_AUTO_UPDATE=1
+            brew install python@3.10
             $HOME/.local/bin/poetry install
             $HOME/.local/bin/poetry run pyinstaller src/cli.py --onefile --name dfm
       - store_artifacts:
