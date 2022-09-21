@@ -49,21 +49,21 @@ jobs:
       - store_artifacts:
           path: dist/dfm
           destination: cli-unix
-    create-cli-mac:
-      macos:
-        xcode: 13.4.1
-      resource_class: medium
-      steps:
-        - checkout
-        - run:
-            name: Build Mac CLI
-            command: |
-              curl -sSL https://install.python-poetry.org | python -
-              poetry install
-              poetry run pyinstaller src/cli.py --onefile --name dfm
-        - store_artifacts:
-          path: dist/dfm
-          destination: cli-mac     
+  create-cli-mac:
+    macos:
+      xcode: 13.4.1
+    resource_class: medium
+    steps:
+      - checkout
+      - run:
+          name: Build Mac CLI
+          command: |
+            curl -sSL https://install.python-poetry.org | python -
+            poetry install
+            poetry run pyinstaller src/cli.py --onefile --name dfm
+      - store_artifacts:
+        path: dist/dfm
+        destination: cli-mac     
 
 
 workflows:
@@ -78,6 +78,10 @@ workflows:
             branches:
               only: main
       - create-cli-windows:
+          filters:
+            branches:
+              only: main
+      - create-cli-mac:
           filters:
             branches:
               only: main
