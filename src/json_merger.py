@@ -18,12 +18,13 @@ class BaseJsonMerger:
             (int, self.merge_an_int),
             (dict, self.merge_a_dict),
             (str, self.merge_a_str),
-            (NoneType, self.merge_a_none)
+            (NoneType, self.merge_a_none),
         )
 
     # These merging methods are overridden in specific typed merger JsonMerger classes where appropiate.
     # The default behaviour is to convert the value at the node into a list and append it with the value to merge in.
     3
+
     def merge_a_list(self, the_list: list):
         self.json_obj = self.json_obj + (the_list)
 
@@ -39,7 +40,7 @@ class BaseJsonMerger:
         self.json_obj = [self.json_obj]
         self.json_obj.append(the_str)
 
-    def merge_a_none(self, the_none:NoneType):
+    def merge_a_none(self, the_none: NoneType):
         pass
 
     def merge_obj(self, the_obj: list | int | dict | str):
@@ -56,6 +57,7 @@ class BaseJsonMerger:
         raise Exception(
             f"Json object for merging was not one of the 4 expected types (list, int, dict, str). Instead it was {str(type(the_obj))}"
         )
+
 
 @dataclass
 class ListJsonMerger(BaseJsonMerger):
@@ -99,6 +101,7 @@ class ListJsonMerger(BaseJsonMerger):
         """
         self.json_obj.append(the_str)
 
+
 @dataclass
 class IntJsonMerger(BaseJsonMerger):
     """
@@ -116,6 +119,7 @@ class IntJsonMerger(BaseJsonMerger):
             the_int: The integer to merge in.
         """
         self.json_obj += the_int
+
 
 @dataclass
 class DictJsonMerger(BaseJsonMerger):
@@ -140,6 +144,7 @@ class DictJsonMerger(BaseJsonMerger):
         json_obj_copy = deepcopy(self.json_obj)
         self.json_obj = json_obj_copy | the_dict
 
+
 @dataclass
 class StrJsonMerger(BaseJsonMerger):
     """
@@ -149,6 +154,7 @@ class StrJsonMerger(BaseJsonMerger):
     """
 
     json_obj: str
+
 
 @dataclass
 class NoneJsonMerger(BaseJsonMerger):
@@ -193,7 +199,6 @@ class NoneJsonMerger(BaseJsonMerger):
         self.json_obj = the_str
 
 
-
 @dataclass
 class JsonMergerFactory:
     """
@@ -208,7 +213,13 @@ class JsonMergerFactory:
     def generate_json_merger(self):
         for obj_type, type_merger in zip(
             [list, int, dict, str, NoneType],
-            [ListJsonMerger, IntJsonMerger, DictJsonMerger, StrJsonMerger, NoneJsonMerger],
+            [
+                ListJsonMerger,
+                IntJsonMerger,
+                DictJsonMerger,
+                StrJsonMerger,
+                NoneJsonMerger,
+            ],
         ):
             if type(self.json_to_merge_into) == obj_type:
                 return type_merger(self.json_to_merge_into)

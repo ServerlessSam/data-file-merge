@@ -38,15 +38,22 @@ class TestSubstitutions:
 class TestFileLocations:
     def test_file_locations(self):
         file_location = FileLocation(
-            path="Users/samuellock/Documents/GitHub/data-file-merge/tests/test_files_directory/${Sub1}/nested_test_file_*.json",
+            path=str(
+                Path().absolute()
+                / "tests/test_files_directory/${Sub1}/nested_test_file_*.json"
+            )[
+                1:
+            ],  # the [1:] removes the prefixed '/' which is a known issue.
             subs={"Sub1": Substitution(LiteralReferenceType(), "nested_directory")},
         )
         assert file_location.resolved_paths == [
-            Path(
-                "/Users/samuellock/Documents/GitHub/data-file-merge/tests/test_files_directory/nested_directory/nested_test_file_1.json"
+            Path().absolute()
+            / Path(
+                "tests/test_files_directory/nested_directory/nested_test_file_1.json"
             ),
-            Path(
-                "/Users/samuellock/Documents/GitHub/data-file-merge/tests/test_files_directory/nested_directory/nested_test_file_2.json"
+            Path().absolute()
+            / Path(
+                "tests/test_files_directory/nested_directory/nested_test_file_2.json"
             ),
         ]
 
@@ -54,7 +61,10 @@ class TestFileLocations:
 class TestDestinationFiles:
     def test_destination_files(self):
         dest_file_location = FileLocation(
-            path="Users/samuellock/Documents/GitHub/data-file-merge/tests/test_files_directory/${Sub1}/nested_test_file_1.json",
+            path=str(
+                Path().absolute()
+                / "tests/test_files_directory/${Sub1}/nested_test_file_1.json"
+            )[1:],
             subs={"Sub1": Substitution(LiteralReferenceType(), "nested_directory")},
         )
 
@@ -66,7 +76,7 @@ class TestDestinationFiles:
 
     def test_destination_file_doesnt_exist(self):
         dest_file_location = FileLocation(
-            path="Users/samuellock/Documents/GitHub/data-file-merge/tests/test_files_directory/${Sub1}/nested_test_file_DOESNT_EXIST.json",
+            path="./tests/test_files_directory/${Sub1}/nested_test_file_DOESNT_EXIST.json",
             subs={"Sub1": Substitution(LiteralReferenceType(), "nested_directory")},
         )
         dest = DestinationFile(dest_file_location)
@@ -76,7 +86,10 @@ class TestDestinationFiles:
 class TestSourceFiles:
     def test_source_files(self):
         file_location = FileLocation(
-            path="Users/samuellock/Documents/GitHub/data-file-merge/tests/test_files_directory/${Sub1}/nested_test_file_*.json",
+            path=str(
+                Path().absolute()
+                / "tests/test_files_directory/${Sub1}/nested_test_file_*.json"
+            )[1:],
             subs={"Sub1": Substitution(LiteralReferenceType(), "nested_directory")},
         )
         src = SourceFile(file_location, "$.AnotherKeyInTheFile", "$")
@@ -89,13 +102,19 @@ class TestSourceFiles:
 class TestConfigs:
     def test_configs(self):
         src_file_location = FileLocation(
-            path="Users/samuellock/Documents/GitHub/data-file-merge/tests/test_files_directory/${Sub1}/nested_test_file_*.json",
+            path=str(
+                Path().absolute()
+                / "tests/test_files_directory/${Sub1}/nested_test_file_*.json"
+            )[1:],
             subs={"Sub1": Substitution(LiteralReferenceType(), "nested_directory")},
         )
         src = SourceFile(src_file_location, "$.AnotherKeyInTheFile", "$")
 
         dest_file_location = FileLocation(
-            path="Users/samuellock/Documents/GitHub/data-file-merge/tests/test_files_directory/${Sub1}/build_test_merged_file.json",
+            path=str(
+                Path().absolute()
+                / "tests/test_files_directory/${Sub1}/build_test_merged_file.json"
+            )[1:],
             subs={"Sub1": Substitution(LiteralReferenceType(), "nested_directory")},
         )
         src = SourceFile(src_file_location, "$.AnotherKeyInTheFile", "$")
@@ -111,13 +130,19 @@ class TestConfigs:
 
     def test_config_build(self):
         src_file_location = FileLocation(
-            path="Users/samuellock/Documents/GitHub/data-file-merge/tests/test_files_directory/${Sub1}/nested_test_file_*.json",
+            path=str(
+                Path().absolute()
+                / "tests/test_files_directory/${Sub1}/nested_test_file_*.json"
+            )[1:],
             subs={"Sub1": Substitution(LiteralReferenceType(), "nested_directory")},
         )
         src = SourceFile(src_file_location, "$.AnotherKeyInTheFile", "$")
 
         dest_file_location = FileLocation(
-            path="Users/samuellock/Documents/GitHub/data-file-merge/tests/test_files_directory/${Sub1}/build_test_merged_file.json",
+            path=str(
+                Path().absolute()
+                / "tests/test_files_directory/${Sub1}/build_test_merged_file.json"
+            )[1:],
             subs={"Sub1": Substitution(LiteralReferenceType(), "nested_directory")},
         )
         src = SourceFile(src_file_location, "$.AnotherKeyInTheFile", "$")
@@ -126,7 +151,7 @@ class TestConfigs:
         config.build()
 
         assert JsonFileType.load_from_file(
-            "/Users/samuellock/Documents/GitHub/data-file-merge/tests/test_files_directory/nested_directory/build_test_merged_file.json"
+            "./tests/test_files_directory/nested_directory/build_test_merged_file.json"
         ) == {
             "Hello": "There",
             "UhOh": "This",
@@ -135,39 +160,44 @@ class TestConfigs:
             "OneIs2": "NestedAlso",
         }
 
-    def test_config_load(self):
-        parameters = {"TheWordTest": "test"}
-        expected_config = BuildConfig(
-            source_files=[
-                SourceFile(
-                    source_file_location=FileLocation(
-                        path="../data-file-merge/tests/test_files_directory/nested_directory/nested_${Sub1}_file_1.json",
-                        subs={
-                            "Sub1": Substitution(
-                                ParameterReferenceType(parameters), "TheWordTest"
-                            )
-                        },
-                    ),
-                    source_file_root="$.AnotherKeyInTheFile",
-                    destination_file_content="$",
-                ),
-                SourceFile(
-                    source_file_location=FileLocation(
-                        path="../data-file-merge/tests/test_files_directory/nested_directory/nested_${Sub1}_file_2.json",
-                        subs={"Sub1": Substitution(LiteralReferenceType(), "test")},
-                    ),
-                    source_file_root="$.AnotherKeyInTheFile",
-                    destination_file_content="$",
-                ),
-            ],
-            destination_file=DestinationFile(
-                FileLocation(
-                    path="Users/samuellock/Documents/GitHub/../data-file-merge/tests/test_files_directory/nested_directory/build_test_merged_file.json"
-                )
-            ),
-        )
-        generated_config = BuildConfig.load_config_from_file(
-            file_path="/Users/samuellock/Documents/GitHub/data-file-merge/tests/test_files_directory/nested_directory/build_test_config.json",
-            parameters=parameters,
-        )
-        assert expected_config == generated_config
+    """
+    Commenting out the following test because we still need to include full paths in FileLocation in config files (minus the prefix '/').
+    This causes a problem because running unit tests locally vs running them in CI/CD will need the paths to be entirely different.
+    TODO Re-add this test once we complete https://github.com/ServerlessSam/data-file-merge/issues/10
+    """
+    # def test_config_load(self):
+    #     parameters = {"TheWordTest": "test"}
+    #     expected_config = BuildConfig(
+    #         source_files=[
+    #             SourceFile(
+    #                 source_file_location=FileLocation(
+    #                     path= str(Path().absolute() / "tests/test_files_directory/nested_directory/nested_${Sub1}_file_1.json")[1:],
+    #                     subs={
+    #                         "Sub1": Substitution(
+    #                             ParameterReferenceType(parameters), "TheWordTest"
+    #                         )
+    #                     },
+    #                 ),
+    #                 source_file_root="$.AnotherKeyInTheFile",
+    #                 destination_file_content="$",
+    #             ),
+    #             SourceFile(
+    #                 source_file_location=FileLocation(
+    #                     path= str(Path().absolute() / "tests/test_files_directory/nested_directory/nested_${Sub1}_file_2.json")[1:],
+    #                     subs={"Sub1": Substitution(LiteralReferenceType(), "test")},
+    #                 ),
+    #                 source_file_root="$.AnotherKeyInTheFile",
+    #                 destination_file_content="$",
+    #             ),
+    #         ],
+    #         destination_file=DestinationFile(
+    #             FileLocation(
+    #                 path= str(Path().absolute() / "tests/test_files_directory/nested_directory/build_test_merged_file.json")[1:]
+    #             )
+    #         ),
+    #     )
+    #     generated_config = BuildConfig.load_config_from_file(
+    #         file_path= str(Path().absolute() / "tests/test_files_directory/nested_directory/build_test_config.json"),
+    #         parameters=parameters,
+    #     )
+    #     assert expected_config == generated_config
