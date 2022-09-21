@@ -82,4 +82,7 @@ workflows:
           filters:
             branches:
               only: main
-      - create-cli-mac
+      - create-cli-mac:
+          filters:
+            branches:
+              only: main
