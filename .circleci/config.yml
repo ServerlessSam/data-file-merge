@@ -62,8 +62,8 @@ jobs:
             poetry install
             poetry run pyinstaller src/cli.py --onefile --name dfm
       - store_artifacts:
-        path: dist/dfm
-        destination: cli-mac     
+          path: dist/dfm
+          destination: cli-mac     
 
 
 workflows:
