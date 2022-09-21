@@ -58,7 +58,7 @@ jobs:
       - run:
           name: Build Mac CLI
           command: |
-            curl -sSL https://install.python-poetry.org | python -
+            curl -sSL https://install.python-poetry.org | python3 -
             poetry install
             poetry run pyinstaller src/cli.py --onefile --name dfm
       - store_artifacts:
