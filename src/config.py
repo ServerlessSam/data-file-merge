@@ -135,7 +135,10 @@ class BuildConfig:
         )
 
     @staticmethod
-    def load_config_from_file(file_path: Path, parameters=None):
+    def load_config_from_file(
+        file_path: Path,
+        parameters=None,
+    ):
         if parameters is None:
             parameters = {}
         config_dict = JsonFileType.load_from_file(file_path)
