@@ -1,5 +1,6 @@
 from pathlib import Path
 
+from src import ROOT_PATH
 from src.config import BuildConfig, DestinationFile, SourceFile
 from src.file_location import FileLocation, Substitution
 from src.file_types import JsonFileType
@@ -165,39 +166,52 @@ class TestConfigs:
     This causes a problem because running unit tests locally vs running them in CI/CD will need the paths to be entirely different.
     TODO Re-add this test once we complete https://github.com/ServerlessSam/data-file-merge/issues/10
     """
-    # def test_config_load(self):
-    #     parameters = {"TheWordTest": "test"}
-    #     expected_config = BuildConfig(
-    #         source_files=[
-    #             SourceFile(
-    #                 source_file_location=FileLocation(
-    #                     path= str(Path().absolute() / "tests/test_files_directory/nested_directory/nested_${Sub1}_file_1.json")[1:],
-    #                     subs={
-    #                         "Sub1": Substitution(
-    #                             ParameterReferenceType(parameters), "TheWordTest"
-    #                         )
-    #                     },
-    #                 ),
-    #                 source_file_root="$.AnotherKeyInTheFile",
-    #                 destination_file_content="$",
-    #             ),
-    #             SourceFile(
-    #                 source_file_location=FileLocation(
-    #                     path= str(Path().absolute() / "tests/test_files_directory/nested_directory/nested_${Sub1}_file_2.json")[1:],
-    #                     subs={"Sub1": Substitution(LiteralReferenceType(), "test")},
-    #                 ),
-    #                 source_file_root="$.AnotherKeyInTheFile",
-    #                 destination_file_content="$",
-    #             ),
-    #         ],
-    #         destination_file=DestinationFile(
-    #             FileLocation(
-    #                 path= str(Path().absolute() / "tests/test_files_directory/nested_directory/build_test_merged_file.json")[1:]
-    #             )
-    #         ),
-    #     )
-    #     generated_config = BuildConfig.load_config_from_file(
-    #         file_path= str(Path().absolute() / "tests/test_files_directory/nested_directory/build_test_config.json"),
-    #         parameters=parameters,
-    #     )
-    #     assert expected_config == generated_config
+
+    def test_config_load(self):
+        parameters = {"TheWordTest": "test"}
+        expected_config = BuildConfig(
+            source_files=[
+                SourceFile(
+                    source_file_location=FileLocation(
+                        path=str(
+                            Path(ROOT_PATH)
+                            / "tests/test_files_directory/nested_directory/nested_${Sub1}_file_1.json"
+                        )[1:],
+                        subs={
+                            "Sub1": Substitution(
+                                ParameterReferenceType(parameters), "TheWordTest"
+                            )
+                        },
+                    ),
+                    source_file_root="$.AnotherKeyInTheFile",
+                    destination_file_content="$",
+                ),
+                SourceFile(
+                    source_file_location=FileLocation(
+                        path=str(
+                            Path(ROOT_PATH)
+                            / "tests/test_files_directory/nested_directory/nested_${Sub1}_file_2.json"
+                        )[1:],
+                        subs={"Sub1": Substitution(LiteralReferenceType(), "test")},
+                    ),
+                    source_file_root="$.AnotherKeyInTheFile",
+                    destination_file_content="$",
+                ),
+            ],
+            destination_file=DestinationFile(
+                FileLocation(
+                    path=str(
+                        Path(ROOT_PATH)
+                        / "tests/test_files_directory/nested_directory/build_test_merged_file.json"
+                    )[1:]
+                )
+            ),
+        )
+        generated_config = BuildConfig.load_config_from_file(
+            file_path=str(
+                Path().absolute()
+                / "tests/test_files_directory/nested_directory/build_test_config.json"
+            ),
+            parameters=parameters,
+        )
+        assert expected_config == generated_config
