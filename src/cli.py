@@ -56,7 +56,6 @@ def main():
         parameters = parse_parameter_string(args.parameters)
     else:
         parameters = None
-
     if args.action == "merge":
         cfg = BuildConfig.load_config_from_file(args.config_file_path, parameters)
         cfg.build()

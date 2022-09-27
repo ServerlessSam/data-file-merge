@@ -3,6 +3,7 @@ from pathlib import Path
 
 from jsonpath_ng import parse
 
+from src import ROOT_PATH
 from src.file_location import FileLocation, Substitution
 from src.file_types import JsonFileType
 from src.json_merger import JsonMergerFactory
@@ -58,9 +59,9 @@ class DestinationFile:
             raise Exception(
                 "Attempting to use multiple destination files. We don't support this (yet)!"
             )
-        if (Path("/") / self.destination_file_location.substituted_path).exists():
+        if (Path(ROOT_PATH) / self.destination_file_location.substituted_path).exists():
             self.file_content = JsonFileType.load_from_file(
-                Path("/") / self.destination_file_location.substituted_path
+                Path(ROOT_PATH) / self.destination_file_location.substituted_path
             )
         else:
             self.file_content = {}
@@ -129,12 +130,15 @@ class BuildConfig:
         # JsonFileType.save_to_file(content, self.destination_file.destination_file_location.resolved_paths[0])
         JsonFileType.save_to_file(
             content,
-            Path("/")
+            Path(ROOT_PATH)
             / self.destination_file.destination_file_location.substituted_path,
         )
 
     @staticmethod
-    def load_config_from_file(file_path: Path, parameters=None):
+    def load_config_from_file(
+        file_path: Path,
+        parameters=None,
+    ):
         if parameters is None:
             parameters = {}
         config_dict = JsonFileType.load_from_file(file_path)

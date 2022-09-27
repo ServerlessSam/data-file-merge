@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from src import ROOT_PATH
 from src.reference_types import BaseReferenceType
 from src.regex import RegexExtractor
 
@@ -59,9 +60,7 @@ class FileLocation:
                     then finds all local files matching this path.
         Returns:    A list of pathlib paths that satisfy the file search
         """
-        p = Path(
-            "/"
-        )  # TODO somehow set the root node to search for files from. Either an env var or in the file. Probably the file.
+        p = Path(ROOT_PATH)
         return list(p.glob(self.substituted_path))
 
     def substitute(self) -> str:
