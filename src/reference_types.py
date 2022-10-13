@@ -1,12 +1,14 @@
+from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 
 from jsonpath_ng import parse
 
+from src.exceptions import ReferenceTypeError
 from src.regex import RegexExtractor
 
 
 @dataclass
-class BaseReferenceType:
+class BaseReferenceType(ABC):
     """
     Synopsis:   A base class for all reference types to inherit
     """
@@ -14,6 +16,7 @@ class BaseReferenceType:
     parameters: dict = field(default_factory=dict)
     file_content: dict | list = None
 
+    @abstractmethod
     def evaluate(self, value: str, **kwargs) -> str:
         raise NotImplementedError()
 
@@ -24,7 +27,8 @@ class ParameterReferenceType(BaseReferenceType):
     Synopsis:   A class for the 'Parameter' reference type.
                 This will retrieve a given parameter to use as a value.
     Parameters:
-        parameters = a key-value dictionary of the parameters used when triggering the build/split #TODO we should get these in a better way I think.
+        parameters = a key-value dictionary of the parameters used when triggering the build/split
+        #TODO we should get these in a better way I think.
     """
 
     def evaluate(self, value: str, regex: str = None) -> str:
@@ -34,7 +38,7 @@ class ParameterReferenceType(BaseReferenceType):
             else:
                 return self.parameters[value]
         else:
-            raise Exception(
+            raise ValueError(
                 f"Expected parameter with name '{value}' not found. Are your parameters correct?"
             )
 
@@ -62,12 +66,12 @@ class ContentReferenceType(BaseReferenceType):
             match.value for match in jsonpath_expr.find(self.file_content)
         ]
         if len(jsonpath_matches) != 1:
-            raise Exception(
+            raise ReferenceTypeError(
                 f"Content reference type returned {len(jsonpath_matches)} matches instead of the required 1."
             )
         value_in_file = jsonpath_matches[0]
         if type(value_in_file) not in [int, str]:
-            raise Exception(
+            raise ReferenceTypeError(
                 f"Content from file: {str(value_in_file)} is not a string or int."
             )
         if regex:
@@ -101,8 +105,9 @@ class KeyReferenceType(BaseReferenceType):
             match.value for match in jsonpath_expr.find(self.file_content)
         ]
         if len(jsonpath_matches) != 1:
-            raise Exception(
-                f"Key reference type returned {len(jsonpath_matches)} matches instead of the required 1. A key reference type must return a dictionary with a single key."
+            raise ReferenceTypeError(
+                f"Key reference type returned {len(jsonpath_matches)} matches instead of the required 1."
+                f" A key reference type must return a dictionary with a single key."
             )
         key_in_file = list(jsonpath_matches[0].keys())[0]
         if regex:
@@ -150,6 +155,6 @@ class ReferenceTypeFactory:
         for type in self.REFERENCE_TYPE_MAPPING:
             if self.reference_type_str == type[0]:
                 return type[1]
-        raise Exception(
+        raise ReferenceTypeError(
             f"Reference type was not found for string: {self.reference_type_str}"
         )
