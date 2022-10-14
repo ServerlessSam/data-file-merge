@@ -53,15 +53,7 @@ class PascalCase(BaseNamingConvention):
             list_to_convert = a lowercased list of strings
         Returns:    A single string of pascal case naming convention
         """
-        to_return = ""
-        for word in list_to_convert:
-            if not word.islower():
-                raise NamingConventionError(
-                    "String wasn't lowercase for some reason. Something has gone wrong."
-                )
-            word[0] = word[0].upper()
-            to_return += word
-        return to_return
+        return "".join([i.capitalize() for i in list_to_convert])
 
 
 @dataclass
@@ -87,9 +79,7 @@ class SnakeCase(BaseNamingConvention):
                 f"{string_to_convert} is not of the expected naming convention."
             )
         else:
-            for string_found in strings_found:
-                # TODO: this var is never used, what was the intention here?
-                string_found = string_found.LowerCase()
+            strings_found = [i.lower() for i in strings_found]
 
         if (
             len("".join(str(found) for found in strings_found))
@@ -105,12 +95,7 @@ class SnakeCase(BaseNamingConvention):
             list_to_convert = a lowercased list of strings
         Returns:    A single string of snake case naming convention
         """
-        for word in list_to_convert:
-            if not word.islower():
-                raise NamingConventionError(
-                    "String wasn't lowercase for some reason. Something has gone wrong."
-                )
-        return "_".join(str(word) for word in list_to_convert)
+        return "_".join(list_to_convert)
 
 
 @dataclass
