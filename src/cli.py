@@ -1,6 +1,7 @@
 import argparse
 
 from src.config import BuildConfig
+from src.version import __version__
 
 
 def parse_parameter_string(param_str: str) -> dict:
@@ -47,6 +48,11 @@ def main():
         "--parameters",
         type=str,
         help='Key value pairs of parameters. E.g "Key1=Value1,Key2=Value2..."',
+    )
+    parser.add_argument(
+        "--version",
+        action="version",
+        version="%(prog)s {version}".format(version=__version__),
     )
     args = parser.parse_args()
     print(args)
