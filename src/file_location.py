@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+from functools import cached_property
 from pathlib import Path
 
 from src import ROOT_PATH
@@ -50,11 +51,8 @@ class FileLocation:
         default_factory=dict
     )  # TODO I want this to be dict(Substitution) but I was getting an error that the object was not itterable.
 
-    def __post_init__(self):
-        self.substituted_path = self.substitute()
-        self.resolved_paths = self.resolve()
-
-    def resolve(self) -> list[Path]:
+    @cached_property
+    def resolved_paths(self) -> list[Path]:
         """
         Synopsis:   Resolves all substitutions against the path string
                     then finds all local files matching this path.
@@ -63,7 +61,8 @@ class FileLocation:
         p = Path(ROOT_PATH)
         return list(p.glob(self.substituted_path))
 
-    def substitute(self) -> str:
+    @cached_property
+    def substituted_path(self) -> str:
         """
         Synopsis: Performs a substitution on the 'path' attribute using the 'subs' attributes as substitutions.
         Returns: A fully substitutited path.

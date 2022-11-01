@@ -1,10 +1,13 @@
+from abc import ABC
 from copy import deepcopy
 from dataclasses import dataclass
 from types import NoneType
 
+from src.exceptions import JsonMergerError
+
 
 @dataclass
-class BaseJsonMerger:
+class BaseJsonMerger(ABC):
     """
     Synopsis: A base class to merge values into an object in preparation for producing a new json object.
     """
@@ -21,9 +24,8 @@ class BaseJsonMerger:
             (NoneType, self.merge_a_none),
         )
 
-    # These merging methods are overridden in specific typed merger JsonMerger classes where appropiate.
+    # These merging methods are overridden in specific typed merger JsonMerger classes where appropriate.
     # The default behaviour is to convert the value at the node into a list and append it with the value to merge in.
-    3
 
     def merge_a_list(self, the_list: list):
         self.json_obj = self.json_obj + (the_list)
@@ -51,10 +53,10 @@ class BaseJsonMerger:
             the_obj: The object to merge in.
         Returns: The output of the merger function. However the merger function should change attributes of the class without returning anything.
         """
-        for mapping in self.TYPE_TO_MERGER_MAPPING:
-            if type(the_obj) == mapping[0]:
-                return mapping[1](the_obj)
-        raise Exception(
+        for object_type, merge_method in self.TYPE_TO_MERGER_MAPPING:
+            if type(the_obj) == object_type:
+                return merge_method(the_obj)
+        raise TypeError(
             f"Json object for merging was not one of the 4 expected types (list, int, dict, str). Instead it was {str(type(the_obj))}"
         )
 
@@ -69,7 +71,7 @@ class ListJsonMerger(BaseJsonMerger):
 
     json_obj: list
 
-    def merge_a_list(self, the_list: list) -> list:
+    def merge_a_list(self, the_list: list):
         """
         Synopsis: Merges a list into the list. The two are merged. E.g [A,B]+[C,D]=[A,B,C,D]
         Parameters:
@@ -112,7 +114,7 @@ class IntJsonMerger(BaseJsonMerger):
 
     json_obj: int
 
-    def merge_an_int(self, the_int: int) -> int:
+    def merge_an_int(self, the_int: int):
         """
         Synopsis: Sums the original integer with the_int.
         Parameters:
@@ -131,7 +133,7 @@ class DictJsonMerger(BaseJsonMerger):
 
     json_obj: dict
 
-    def merge_a_dict(self, the_dict: dict) -> dict:
+    def merge_a_dict(self, the_dict: dict):
         """
         Synopsis:   Adds the keys from the_dict to json_obj as part of a merge.
                     Keys cannot be overriden #TODO Maybe make this configurable?
@@ -140,7 +142,7 @@ class DictJsonMerger(BaseJsonMerger):
         """
         for key in the_dict:
             if key in self.json_obj:
-                raise Exception("Attempting to override keys!")
+                raise JsonMergerError("Attempting to override keys!")
         json_obj_copy = deepcopy(self.json_obj)
         self.json_obj = json_obj_copy | the_dict
 
@@ -164,7 +166,7 @@ class NoneJsonMerger(BaseJsonMerger):
         json_obj: The string to merge into. (Should be 'None')
     """
 
-    json_obj: NoneType
+    json_obj: list | int | dict | str | NoneType
 
     def merge_a_list(self, the_list: list):
         """
@@ -182,7 +184,7 @@ class NoneJsonMerger(BaseJsonMerger):
         """
         self.json_obj = the_int
 
-    def merge_a_dict(self, the_dict: dict) -> dict:
+    def merge_a_dict(self, the_dict: dict):
         """
         Synopsis: Replaces the NoneType object with the dict.
         Parameters:
@@ -223,6 +225,6 @@ class JsonMergerFactory:
         ):
             if type(self.json_to_merge_into) == obj_type:
                 return type_merger(self.json_to_merge_into)
-        raise Exception(
+        raise TypeError(
             f"Json object for merging was not one of the 4 expected types (list, int, dict, str). Instead it was {str(type(self.json_to_merge_into))}"
         )

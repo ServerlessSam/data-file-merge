@@ -15,9 +15,18 @@ class TestNamingConventions:
 
 
 class TestStringConverter:
-    def test_string_conversion(self):
-        converter = StringConverter(
-            from_convention=PascalCase(), to_convention=SnakeCase()
-        )
+    class TestConversionFromPascalCase:
+        def test_pascal_case_conversion(self):
+            converter = StringConverter(
+                from_convention=PascalCase(), to_convention=SnakeCase()
+            )
 
-        assert converter.convert("HelloThere!") == "hello_there!"
+            assert converter.convert("HelloThere!") == "hello_there!"
+
+    class TestConversionFromSnakeCase:
+        def test_pascal_case_conversion(self):
+            converter = StringConverter(
+                from_convention=SnakeCase(), to_convention=PascalCase()
+            )
+
+            assert converter.convert("hello_there!") == "HelloThere!"

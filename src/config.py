@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from functools import cached_property
 from pathlib import Path
 
 from jsonpath_ng import parse
@@ -25,10 +26,8 @@ class SourceFile:
     source_file_root: str
     destination_file_content: str
 
-    def __post_init__(self):
-        self.retreived_src_content = self.retrieve_content()
-
-    def retrieve_content(self) -> list:
+    @cached_property
+    def retrieved_src_content(self) -> list:
         """
         Synopsis:   Retrieves the content (from the specified node downwards)
                     for all files that are found at the specified file location.
@@ -59,12 +58,18 @@ class DestinationFile:
             raise Exception(
                 "Attempting to use multiple destination files. We don't support this (yet)!"
             )
-        if (Path(ROOT_PATH) / self.destination_file_location.substituted_path).exists():
-            self.file_content = JsonFileType.load_from_file(
+
+    @cached_property
+    def file_content(self) -> dict | list:
+        return (
+            JsonFileType.load_from_file(
                 Path(ROOT_PATH) / self.destination_file_location.substituted_path
             )
-        else:
-            self.file_content = {}
+            if (
+                Path(ROOT_PATH) / self.destination_file_location.substituted_path
+            ).exists()
+            else {}
+        )
 
 
 @dataclass
@@ -113,7 +118,7 @@ class BuildConfig:
             if dest_content_matches == []:
                 dest_content_matches = [None]
             for destination_match in dest_content_matches:
-                for src_content in src.retreived_src_content:
+                for src_content in src.retrieved_src_content:
                     dest_json_merger = JsonMergerFactory(
                         destination_match
                     ).generate_json_merger()

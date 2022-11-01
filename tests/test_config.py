@@ -94,7 +94,7 @@ class TestSourceFiles:
             subs={"Sub1": Substitution(LiteralReferenceType(), "nested_directory")},
         )
         src = SourceFile(file_location, "$.AnotherKeyInTheFile", "$")
-        assert src.retreived_src_content == [
+        assert src.retrieved_src_content == [
             {"UhOh": "This", "OneIs": "Nested"},
             {"UhOh2": "This", "OneIs2": "NestedAlso"},
         ]
@@ -109,8 +109,8 @@ class TestConfigs:
             )[1:],
             subs={"Sub1": Substitution(LiteralReferenceType(), "nested_directory")},
         )
-        src = SourceFile(src_file_location, "$.AnotherKeyInTheFile", "$")
 
+        # TODO: this leave changes in build_test_merged_file after test suite runs. Should be doing this in memory
         dest_file_location = FileLocation(
             path=str(
                 Path().absolute()

@@ -1,9 +1,12 @@
 import re
+from abc import ABC, abstractmethod
 from dataclasses import dataclass
+
+from src.exceptions import NamingConventionError
 
 
 @dataclass
-class BaseNamingConvention:
+class BaseNamingConvention(ABC):
     """
     Synopsis:   The base naming convention class
     Parameters:
@@ -21,12 +24,13 @@ class BaseNamingConvention:
         """
         strings_found = re.findall(self.regex, string_to_convert)
         if not strings_found:
-            raise Exception(
+            raise NamingConventionError(
                 f"{string_to_convert} is not of the expected naming convention."
             )
         lowercase_string_list = list(map(str.lower, strings_found))
         return lowercase_string_list
 
+    @abstractmethod
     def convert_from_list(self, list_to_convert: list[str]) -> str:
         raise NotImplementedError()
 
@@ -36,7 +40,8 @@ class PascalCase(BaseNamingConvention):
     """
     Synopsis:   The naming convention class for pascal case
     Parameters:
-        regex = the rstring to use as part of a conversion. #TODO This regex doesn't enforce pascal from the start of the string. If a string is not pascal to start with, the start is simply not matched. SHOULD FIX.
+        regex = the rstring to use as part of a conversion.
+    #TODO This regex doesn't enforce pascal from the start of the string. If a string is not pascal to start with, the start is simply not matched. SHOULD FIX.
     """
 
     regex = r"[A-Z][^A-Z\s]*"
@@ -48,15 +53,7 @@ class PascalCase(BaseNamingConvention):
             list_to_convert = a lowercased list of strings
         Returns:    A single string of pascal case naming convention
         """
-        to_return = ""
-        for word in list_to_convert:
-            if not word.islower():
-                raise Exception(
-                    "String wasn't lowercase for some reason. Something has gone wrong."
-                )
-            word[0] = word[0].upper()
-            to_return += word
-        return to_return
+        return "".join([i.capitalize() for i in list_to_convert])
 
 
 @dataclass
@@ -78,18 +75,17 @@ class SnakeCase(BaseNamingConvention):
         """
         strings_found = re.findall(self.regex, string_to_convert)
         if not strings_found:
-            raise Exception(
+            raise NamingConventionError(
                 f"{string_to_convert} is not of the expected naming convention."
             )
         else:
-            for string_found in strings_found:
-                string_found = string_found.LowerCase()
+            strings_found = [i.lower() for i in strings_found]
 
         if (
             len("".join(str(found) for found in strings_found))
             != len(string_to_convert) - len(strings_found) + 1
         ):
-            raise Exception("String was not split correctly.")
+            raise NamingConventionError("String was not split correctly.")
         return strings_found
 
     def convert_from_list(self, list_to_convert: list[str]) -> str:
@@ -99,12 +95,7 @@ class SnakeCase(BaseNamingConvention):
             list_to_convert = a lowercased list of strings
         Returns:    A single string of snake case naming convention
         """
-        for word in list_to_convert:
-            if not word.islower():
-                raise Exception(
-                    "String wasn't lowercase for some reason. Something has gone wrong."
-                )
-        return "_".join(str(word) for word in list_to_convert)
+        return "_".join(list_to_convert)
 
 
 @dataclass
@@ -146,6 +137,7 @@ class UpperCase(BaseNamingConvention):
         to_return = ""
         for string in list_to_convert:
             to_return += string.upper()
+        return to_return
 
 
 @dataclass
@@ -161,6 +153,7 @@ class LowerCase(BaseNamingConvention):
         to_return = ""
         for string in list_to_convert:
             to_return += string.lower()
+        return to_return
 
 
 @dataclass
@@ -197,12 +190,12 @@ class ConversionStringParser:
         """
         split_string = self.conversion_string.split("To")
         if len(split_string) != 2:
-            raise Exception(
+            raise NamingConventionError(
                 f"Conversion string {self.conversion_string} is not of the expected format."
             )
         for individual_string in split_string:
             if individual_string not in self.SUPPORTED_CONVENTIONS:
-                raise Exception(
+                raise NamingConventionError(
                     f"Conversion string requires {individual_string}, but that is not a supported/recognised casing."
                 )
 
