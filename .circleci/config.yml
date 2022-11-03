@@ -74,14 +74,14 @@ workflows:
   create-cli:
     jobs:
       - create-cli-linux:
-          filters:
-            branches:
-              only: main
+          # filters:
+          #   branches:
+          #     only: main
       - create-cli-windows:
-          filters:
-            branches:
-              only: main
+          # filters:
+          #   branches:
+          #     only: main
       - create-cli-mac:
-          filters:
-            branches:
-              only: main
+          # filters:
+          #   branches:
+          #     only: main
