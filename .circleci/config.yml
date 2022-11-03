@@ -73,15 +73,15 @@ workflows:
       - test
   create-cli:
     jobs:
-      - create-cli-linux:
+      - create-cli-linux
           # filters:
           #   branches:
           #     only: main
-      - create-cli-windows:
+      - create-cli-windows
           # filters:
           #   branches:
           #     only: main
-      - create-cli-mac:
+      - create-cli-mac
           # filters:
           #   branches:
           #     only: main
