@@ -1,4 +1,7 @@
 import argparse
+import os
+import platform
+from pathlib import Path
 
 from src.config import BuildConfig
 from src.version import __version__
@@ -18,6 +21,19 @@ def parse_parameter_string(param_str: str) -> dict:
         dict_to_return[key] = value
 
     return dict_to_return
+
+
+def get_root_path_from_env_var(env_var_name: str) -> Path:
+    os_default_root_path_mapping = {
+        "Windows": "c://",
+        "Darwin": "/",
+        "Linux": "/",
+        "Java": "/",
+        "": "/",
+    }
+    return Path(
+        os.getenv(env_var_name, os_default_root_path_mapping[platform.system()])
+    )
 
 
 """
@@ -50,12 +66,24 @@ def main():
         help='Key value pairs of parameters. E.g "Key1=Value1,Key2=Value2..."',
     )
     parser.add_argument(
+        "-r",
+        "--root-path",
+        type=str,
+        help='The root path to append all file paths contained within the config file to. E.g "/foo/bar"',
+    )
+    parser.add_argument(
         "--version",
         action="version",
         version="%(prog)s {version}".format(version=__version__),
     )
     args = parser.parse_args()
-    print(args)
+
+    # Determine root path
+    root_path = None
+    if args.root_path:
+        root_path = Path(args.root_path)
+    else:
+        root_path = get_root_path_from_env_var("DFM_ROOT_PATH")
 
     # Parse parameters
     if args.parameters:
@@ -63,7 +91,9 @@ def main():
     else:
         parameters = None
     if args.action == "merge":
-        cfg = BuildConfig.load_config_from_file(args.config_file_path, parameters)
+        cfg = BuildConfig.load_config_from_file(
+            args.config_file_path, root_path, parameters
+        )
         cfg.build()
 
     elif args.action == "split":

@@ -2,7 +2,6 @@ from dataclasses import dataclass, field
 from functools import cached_property
 from pathlib import Path
 
-from src import ROOT_PATH
 from src.reference_types import BaseReferenceType
 from src.regex import RegexExtractor
 
@@ -47,6 +46,7 @@ class FileLocation:
     """
 
     path: str
+    root_path: Path
     subs: dict = field(
         default_factory=dict
     )  # TODO I want this to be dict(Substitution) but I was getting an error that the object was not itterable.
@@ -58,8 +58,7 @@ class FileLocation:
                     then finds all local files matching this path.
         Returns:    A list of pathlib paths that satisfy the file search
         """
-        p = Path(ROOT_PATH)
-        return list(p.glob(self.substituted_path))
+        return list(self.root_path.glob(self.substituted_path))
 
     @cached_property
     def substituted_path(self) -> str:
