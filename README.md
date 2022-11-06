@@ -1,10 +1,12 @@
 # data-file-merge
 
-This python module allows you to merge multiple JSON files into a single destination JSON file using a set of rules defined in the [dfm config file](https://github.com/ServerlessSam/data-file-merge/wiki/Configuration)
+This python module/CLI allows you to merge multiple JSON files into a single destination JSON file using a set of rules defined in the [dfm config file](https://github.com/ServerlessSam/data-file-merge/wiki/Configuration)
 
 Please refer to the [project wiki](https://github.com/ServerlessSam/data-file-merge/wiki) for complete documentation including [usage](https://github.com/ServerlessSam/data-file-merge/wiki/Usage) and [configuration file syntax](https://github.com/ServerlessSam/data-file-merge/wiki/Configuration).
 
 # Hello World Example
+
+You can install the CLI for your operating system from [GitHub here](https://github.com/ServerlessSam/data-file-merge/releases).
 
 Using the following config file:
 ```json
@@ -54,4 +56,5 @@ More examples can be found in the [dfm example repo](https://github.com/Serverle
 * check and fix linting issues: ``make format``
 
 ## Contributing to the project
+
 You are welcome to help us rid the world of monolithic data files! Reach out to [ServerlessSam](https://github.com/ServerlessSam) to either find some tickets to complete or bring up any ideas you have.
