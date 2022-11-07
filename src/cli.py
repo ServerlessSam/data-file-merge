@@ -79,7 +79,6 @@ def main():
     args = parser.parse_args()
 
     # Determine root path
-    root_path = None
     if args.root_path:
         root_path = Path(args.root_path)
     else:
