@@ -83,7 +83,7 @@ def main():
     if args.root_path:
         root_path = Path(args.root_path)
     else:
-        root_path = get_root_path_from_env_var("DFM_ROOT_PATH")
+        root_path = Path(args.root_path) if args.root_path else get_root_path_from_env_var("DFM_ROOT_PATH")
 
     # Parse parameters
     if args.parameters:
