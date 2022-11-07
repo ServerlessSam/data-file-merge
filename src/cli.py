@@ -32,7 +32,7 @@ def get_root_path_from_env_var(env_var_name: str) -> Path:
         "": "/",
     }
     return Path(
-        os.getenv(env_var_name, os_default_root_path_mapping[platform.system()])
+        os.getenv(env_var_name, os_default_root_path_mapping.get(platform.system(), "/"))
     )
 
 
