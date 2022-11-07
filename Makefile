@@ -10,3 +10,7 @@ format-check:
 	poetry run flake8 .
 create-cli:
 	poetry run pyinstaller src/cli.py --onefile --name dfm
+build-package:
+	poetry run python setup.py sdist
+release-to-pypi:
+	poetry run twine upload dist/*
