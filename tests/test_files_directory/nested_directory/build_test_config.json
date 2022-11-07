@@ -10,8 +10,8 @@
                     }
                 }
             },
-            "SourceFileRoot" : "$.AnotherKeyInTheFile",
-            "DestinationFileContent" : "$"
+            "SourceFileNode" : "$.AnotherKeyInTheFile",
+            "DestinationFileNode" : "$"
         },
         {
             "SourceFileLocation" : {
@@ -23,8 +23,8 @@
                     }
                 }
             },
-            "SourceFileRoot" : "$.AnotherKeyInTheFile",
-            "DestinationFileContent" : "$"
+            "SourceFileNode" : "$.AnotherKeyInTheFile",
+            "DestinationFileNode" : "$"
         }
     ],
     "DestinationFile" : {
