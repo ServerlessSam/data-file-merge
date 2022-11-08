@@ -144,29 +144,8 @@ class DictJsonMerger(BaseJsonMerger):
             if key in self.json_obj:
                 clashing_json_obj_value = deepcopy(self.json_obj[key])
                 clashing_json_obj_value_merger = JsonMergerFactory(clashing_json_obj_value).generate_json_merger()
-                merged_object = clashing_json_obj_value_merger.merge_obj(the_dict[key])
-                the_dict[key] = merged_object
-                '''
-                Attempting to merge two dicts with a clashing key (key1).
-
-                expected result: 
-                { "key1" : ["value1", "newvalue1"] , "key2" : "value2", "key3" : "value2"}
-
-                Actual results:
-                dict1 = { "key1" : None, "key2" : "value2"}
-
-                When debugging, line 148 is skipped for some reason, 
-                the result of like 147 sets the value of "key1" to none 
-                and moves to the next itteration of the for loop.
-
-                In a python shell:
-                from src.json_merger import *
-                dict1 = { "key1" : "value1", "key2" : "value2"}
-                dict2 = { "key1" : "newvalue1", "key3" : "value2"}
-                merger = JsonMergerFactory(dict1).generate_json_merger()
-                merger.merge_obj(dict2)
-
-                '''
+                clashing_json_obj_value_merger.merge_obj(the_dict[key])
+                the_dict[key] = clashing_json_obj_value_merger.json_obj
         json_obj_copy = deepcopy(self.json_obj)
         self.json_obj = json_obj_copy | the_dict
 
