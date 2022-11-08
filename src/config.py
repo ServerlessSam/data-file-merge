@@ -167,8 +167,8 @@ class BuildConfig:
             source_files.append(
                 SourceFile(
                     FileLocation(src["SourceFileLocation"]["Path"], root_path, subs),
-                    src["SourceFileRoot"],
-                    src["DestinationFileContent"],
+                    src["SourceFileNode"],
+                    src["DestinationFileNode"],
                 )
             )
         dest_subs = {}
