@@ -3,8 +3,6 @@ from copy import deepcopy
 from dataclasses import dataclass
 from types import NoneType
 
-from src.exceptions import JsonMergerError
-
 
 @dataclass
 class BaseJsonMerger(ABC):
@@ -143,7 +141,9 @@ class DictJsonMerger(BaseJsonMerger):
         for key in the_dict:
             if key in self.json_obj:
                 clashing_json_obj_value = deepcopy(self.json_obj[key])
-                clashing_json_obj_value_merger = JsonMergerFactory(clashing_json_obj_value).generate_json_merger()
+                clashing_json_obj_value_merger = JsonMergerFactory(
+                    clashing_json_obj_value
+                ).generate_json_merger()
                 clashing_json_obj_value_merger.merge_obj(the_dict[key])
                 the_dict[key] = clashing_json_obj_value_merger.json_obj
         json_obj_copy = deepcopy(self.json_obj)
