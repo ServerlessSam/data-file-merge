@@ -35,8 +35,7 @@ Using the following config file:
 }
 ```
 ...you are able to merge the content of `foo/bar.json` and `foo/baz.json` into `hello/world.json` (this can either be an existing or new file). The `$`s indicate that we are merging from the root node of both `foo/*.json` files to the root of `hello/world.json`.
-This merge can be achieved with the CLI command `dfm merge <path to this config file>`.
-The only futher set up required is configuring the [root path](https://github.com/ServerlessSam/data-file-merge/wiki/Usage#more-on-the-root-path) which is required.
+This merge can be achieved with the CLI command `dfm merge <path to this config file> --root-path <path to 'foo' directory>`.
 The specific rules followed by the merging logic can be found in [the wiki](https://github.com/ServerlessSam/data-file-merge/wiki/Merging-Logic).
 
 More examples can be found in the [dfm example repo](https://github.com/ServerlessSam/dfm-examples).
