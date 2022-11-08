@@ -3,8 +3,6 @@ from copy import deepcopy
 from dataclasses import dataclass
 from types import NoneType
 
-from src.exceptions import JsonMergerError
-
 
 @dataclass
 class BaseJsonMerger(ABC):
@@ -136,13 +134,18 @@ class DictJsonMerger(BaseJsonMerger):
     def merge_a_dict(self, the_dict: dict):
         """
         Synopsis:   Adds the keys from the_dict to json_obj as part of a merge.
-                    Keys cannot be overriden #TODO Maybe make this configurable?
+                    Clashing keys will have their values merged recursively as per the documentation
         Parameters:
             the_dict: The dict to merge in.
         """
         for key in the_dict:
             if key in self.json_obj:
-                raise JsonMergerError("Attempting to override keys!")
+                clashing_json_obj_value = deepcopy(self.json_obj[key])
+                clashing_json_obj_value_merger = JsonMergerFactory(
+                    clashing_json_obj_value
+                ).generate_json_merger()
+                clashing_json_obj_value_merger.merge_obj(the_dict[key])
+                the_dict[key] = clashing_json_obj_value_merger.json_obj
         json_obj_copy = deepcopy(self.json_obj)
         self.json_obj = json_obj_copy | the_dict
 
