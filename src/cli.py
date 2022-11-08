@@ -32,7 +32,9 @@ def get_root_path_from_env_var(env_var_name: str) -> Path:
         "": "/",
     }
     return Path(
-        os.getenv(env_var_name, os_default_root_path_mapping.get(platform.system(), "/"))
+        os.getenv(
+            env_var_name, os_default_root_path_mapping.get(platform.system(), "/")
+        )
     )
 
 
@@ -79,7 +81,11 @@ def main():
     args = parser.parse_args()
 
     # Determine root path
-    root_path = Path(args.root_path) if args.root_path else get_root_path_from_env_var("DFM_ROOT_PATH")
+    root_path = (
+        Path(args.root_path)
+        if args.root_path
+        else get_root_path_from_env_var("DFM_ROOT_PATH")
+    )
 
     # Parse parameters
     if args.parameters:
