@@ -1,6 +1,5 @@
 from pathlib import Path
 
-from src import ROOT_PATH
 from src.config import BuildConfig, DestinationFile, SourceFile
 from src.file_location import FileLocation, Substitution
 from src.file_types import JsonFileType
@@ -39,12 +38,8 @@ class TestSubstitutions:
 class TestFileLocations:
     def test_file_locations(self):
         file_location = FileLocation(
-            path=str(
-                Path().absolute()
-                / "tests/test_files_directory/${Sub1}/nested_test_file_*.json"
-            )[
-                1:
-            ],  # the [1:] removes the prefixed '/' which is a known issue.
+            path="test_files_directory/${Sub1}/nested_test_file_*.json",
+            root_path=Path(__file__).parent.resolve(),
             subs={"Sub1": Substitution(LiteralReferenceType(), "nested_directory")},
         )
         assert file_location.resolved_paths == [
@@ -62,11 +57,9 @@ class TestFileLocations:
 class TestDestinationFiles:
     def test_destination_files(self):
         dest_file_location = FileLocation(
-            path=str(
-                Path().absolute()
-                / "tests/test_files_directory/${Sub1}/nested_test_file_1.json"
-            )[1:],
+            path="test_files_directory/${Sub1}/nested_test_file_1.json",
             subs={"Sub1": Substitution(LiteralReferenceType(), "nested_directory")},
+            root_path=Path(__file__).parent.resolve(),
         )
 
         dest = DestinationFile(dest_file_location)
@@ -79,6 +72,7 @@ class TestDestinationFiles:
         dest_file_location = FileLocation(
             path="./tests/test_files_directory/${Sub1}/nested_test_file_DOESNT_EXIST.json",
             subs={"Sub1": Substitution(LiteralReferenceType(), "nested_directory")},
+            root_path=Path(__file__).parent.resolve(),
         )
         dest = DestinationFile(dest_file_location)
         assert dest.file_content == {}
@@ -87,11 +81,9 @@ class TestDestinationFiles:
 class TestSourceFiles:
     def test_source_files(self):
         file_location = FileLocation(
-            path=str(
-                Path().absolute()
-                / "tests/test_files_directory/${Sub1}/nested_test_file_*.json"
-            )[1:],
+            path="test_files_directory/${Sub1}/nested_test_file_*.json",
             subs={"Sub1": Substitution(LiteralReferenceType(), "nested_directory")},
+            root_path=Path(__file__).parent.resolve(),
         )
         src = SourceFile(file_location, "$.AnotherKeyInTheFile", "$")
         assert src.retrieved_src_content == [
@@ -103,24 +95,20 @@ class TestSourceFiles:
 class TestConfigs:
     def test_configs(self):
         src_file_location = FileLocation(
-            path=str(
-                Path().absolute()
-                / "tests/test_files_directory/${Sub1}/nested_test_file_*.json"
-            )[1:],
+            path="test_files_directory/${Sub1}/nested_test_file_*.json",
             subs={"Sub1": Substitution(LiteralReferenceType(), "nested_directory")},
+            root_path=Path(__file__).parent.resolve(),
         )
 
         # TODO: this leave changes in build_test_merged_file after test suite runs. Should be doing this in memory
         dest_file_location = FileLocation(
-            path=str(
-                Path().absolute()
-                / "tests/test_files_directory/${Sub1}/build_test_merged_file.json"
-            )[1:],
+            path="test_files_directory/${Sub1}/build_test_merged_file.json",
             subs={"Sub1": Substitution(LiteralReferenceType(), "nested_directory")},
+            root_path=Path(__file__).parent.resolve(),
         )
         src = SourceFile(src_file_location, "$.AnotherKeyInTheFile", "$")
         dest = DestinationFile(dest_file_location)
-        config = BuildConfig([src], dest)
+        config = BuildConfig([src], dest, Path(__file__).parent.resolve())
         assert config.generate_new_dest_content() == {
             "Hello": "There",
             "UhOh": "This",
@@ -131,28 +119,27 @@ class TestConfigs:
 
     def test_config_build(self):
         src_file_location = FileLocation(
-            path=str(
-                Path().absolute()
-                / "tests/test_files_directory/${Sub1}/nested_test_file_*.json"
-            )[1:],
+            path="test_files_directory/${Sub1}/nested_test_file_*.json",
             subs={"Sub1": Substitution(LiteralReferenceType(), "nested_directory")},
+            root_path=Path(__file__).parent.resolve(),
         )
         src = SourceFile(src_file_location, "$.AnotherKeyInTheFile", "$")
 
         dest_file_location = FileLocation(
-            path=str(
-                Path().absolute()
-                / "tests/test_files_directory/${Sub1}/build_test_merged_file.json"
-            )[1:],
+            path="test_files_directory/${Sub1}/build_test_merged_file.json",
             subs={"Sub1": Substitution(LiteralReferenceType(), "nested_directory")},
+            root_path=Path(__file__).parent.resolve(),
         )
         src = SourceFile(src_file_location, "$.AnotherKeyInTheFile", "$")
         dest = DestinationFile(dest_file_location)
-        config = BuildConfig([src], dest)
+        config = BuildConfig([src], dest, Path(__file__).parent.resolve())
         config.build()
 
         assert JsonFileType.load_from_file(
-            "./tests/test_files_directory/nested_directory/build_test_merged_file.json"
+            str(
+                Path(__file__).parent.resolve()
+                / "test_files_directory/nested_directory/build_test_merged_file.json"
+            )
         ) == {
             "Hello": "There",
             "UhOh": "This",
@@ -173,26 +160,22 @@ class TestConfigs:
             source_files=[
                 SourceFile(
                     source_file_location=FileLocation(
-                        path=str(
-                            Path(ROOT_PATH)
-                            / "tests/test_files_directory/nested_directory/nested_${Sub1}_file_1.json"
-                        )[1:],
+                        path="test_files_directory/nested_directory/nested_${Sub1}_file_1.json",
                         subs={
                             "Sub1": Substitution(
                                 ParameterReferenceType(parameters), "TheWordTest"
                             )
                         },
+                        root_path=Path(__file__).parent.resolve(),
                     ),
                     source_file_root="$.AnotherKeyInTheFile",
                     destination_file_content="$",
                 ),
                 SourceFile(
                     source_file_location=FileLocation(
-                        path=str(
-                            Path(ROOT_PATH)
-                            / "tests/test_files_directory/nested_directory/nested_${Sub1}_file_2.json"
-                        )[1:],
+                        path="test_files_directory/nested_directory/nested_${Sub1}_file_2.json",
                         subs={"Sub1": Substitution(LiteralReferenceType(), "test")},
+                        root_path=Path(__file__).parent.resolve(),
                     ),
                     source_file_root="$.AnotherKeyInTheFile",
                     destination_file_content="$",
@@ -200,18 +183,18 @@ class TestConfigs:
             ],
             destination_file=DestinationFile(
                 FileLocation(
-                    path=str(
-                        Path(ROOT_PATH)
-                        / "tests/test_files_directory/nested_directory/build_test_merged_file.json"
-                    )[1:]
+                    path="test_files_directory/nested_directory/build_test_merged_file.json",
+                    root_path=Path(__file__).parent.resolve(),
                 )
             ),
+            root_path=Path(__file__).parent.resolve(),
         )
         generated_config = BuildConfig.load_config_from_file(
             file_path=str(
-                Path().absolute()
-                / "tests/test_files_directory/nested_directory/build_test_config.json"
+                Path(__file__).parent.resolve()
+                / "test_files_directory/nested_directory/build_test_config.json"
             ),
             parameters=parameters,
+            root_path=Path(__file__).parent.resolve(),
         )
         assert expected_config == generated_config

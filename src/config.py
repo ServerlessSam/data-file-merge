@@ -4,7 +4,6 @@ from pathlib import Path
 
 from jsonpath_ng import parse
 
-from src import ROOT_PATH
 from src.file_location import FileLocation, Substitution
 from src.file_types import JsonFileType
 from src.json_merger import JsonMergerFactory
@@ -63,10 +62,12 @@ class DestinationFile:
     def file_content(self) -> dict | list:
         return (
             JsonFileType.load_from_file(
-                Path(ROOT_PATH) / self.destination_file_location.substituted_path
+                self.destination_file_location.root_path
+                / self.destination_file_location.substituted_path
             )
             if (
-                Path(ROOT_PATH) / self.destination_file_location.substituted_path
+                self.destination_file_location.root_path
+                / self.destination_file_location.substituted_path
             ).exists()
             else {}
         )
@@ -76,6 +77,7 @@ class DestinationFile:
 class BuildConfig:
     source_files: list[SourceFile]
     destination_file: DestinationFile
+    root_path: Path
 
     def __eq__(self, other):
 
@@ -135,13 +137,14 @@ class BuildConfig:
         # JsonFileType.save_to_file(content, self.destination_file.destination_file_location.resolved_paths[0])
         JsonFileType.save_to_file(
             content,
-            Path(ROOT_PATH)
+            self.root_path
             / self.destination_file.destination_file_location.substituted_path,
         )
 
     @staticmethod
     def load_config_from_file(
         file_path: Path,
+        root_path: Path,
         parameters=None,
     ):
         if parameters is None:
@@ -163,7 +166,7 @@ class BuildConfig:
                     )
             source_files.append(
                 SourceFile(
-                    FileLocation(src["SourceFileLocation"]["Path"], subs),
+                    FileLocation(src["SourceFileLocation"]["Path"], root_path, subs),
                     src["SourceFileNode"],
                     src["DestinationFileNode"],
                 )
@@ -185,10 +188,13 @@ class BuildConfig:
         dest_file = DestinationFile(
             FileLocation(
                 config_dict["DestinationFile"]["DestinationFileLocation"]["Path"],
+                root_path,
                 dest_subs,
             )
         )
-        return BuildConfig(source_files=source_files, destination_file=dest_file)
+        return BuildConfig(
+            source_files=source_files, destination_file=dest_file, root_path=root_path
+        )
 
     def build(self):
         content = self.generate_new_dest_content()
