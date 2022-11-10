@@ -3,12 +3,14 @@ from pathlib import Path
 
 from setuptools import find_packages, setup
 
+from src.version import __version__
+
 this_directory = Path(__file__).parent
 long_description = (this_directory / "README.md").read_text()
 
 setup(
     name="data-file-merge",
-    version="v0.2.2",
+    version=__version__,
     license="MIT",
     author="Samuel Lock",
     author_email="serverlesssam@gmail.com",
