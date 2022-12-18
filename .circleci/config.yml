@@ -6,7 +6,7 @@ orbs:
 jobs:
   format:
     docker:
-      - image: cimg/python:3.10
+      - image: cimg/python:3.11
     steps:
       - checkout
       - python/install-packages:
@@ -16,7 +16,7 @@ jobs:
          command: poetry run make format-check
   test:
     docker:
-      - image: cimg/python:3.10
+      - image: cimg/python:3.11
     steps:
       - checkout
       - python/install-packages:
@@ -37,7 +37,7 @@ jobs:
           path: cli-windows.zip
   create-cli-linux:
     docker:
-      - image: cimg/python:3.10
+      - image: cimg/python:3.11
     steps:
       - checkout
       - python/install-packages:
@@ -58,7 +58,7 @@ jobs:
       - run:
           name: Build Mac CLI
           command: |
-            brew install python@3.10
+            brew install python@3.11
             curl -sSL https://install.python-poetry.org | python3 -
             $HOME/.local/bin/poetry install
             $HOME/.local/bin/poetry run pyinstaller src/cli.py --onefile --name dfm
