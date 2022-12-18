@@ -83,12 +83,12 @@ class BuildConfig:
 
         src_files_match = True
         for src, other_src in zip(self.source_files, other.source_files):
-            if src.file_node != other_src.source_file_root:
+            if src.file_node != other_src.file_node:
                 src_files_match = False
                 break
             if (
                 src.file_location.substituted_path
-                != other_src.source_file_location.substituted_path
+                != other_src.file_location.substituted_path
             ):
                 src_files_match = False
                 break
