@@ -159,7 +159,7 @@ class TestConfigs:
         expected_config = BuildConfig(
             source_files=[
                 SourceFile(
-                    source_file_location=FileLocation(
+                    file_location=FileLocation(
                         path="test_files_directory/nested_directory/nested_${Sub1}_file_1.json",
                         subs={
                             "Sub1": Substitution(
@@ -168,17 +168,17 @@ class TestConfigs:
                         },
                         root_path=Path(__file__).parent.resolve(),
                     ),
-                    source_file_root="$.AnotherKeyInTheFile",
-                    destination_file_content="$",
+                    file_node="$.AnotherKeyInTheFile",
+                    destination_file_node="$",
                 ),
                 SourceFile(
-                    source_file_location=FileLocation(
+                    file_location=FileLocation(
                         path="test_files_directory/nested_directory/nested_${Sub1}_file_2.json",
                         subs={"Sub1": Substitution(LiteralReferenceType(), "test")},
                         root_path=Path(__file__).parent.resolve(),
                     ),
-                    source_file_root="$.AnotherKeyInTheFile",
-                    destination_file_content="$",
+                    file_node="$.AnotherKeyInTheFile",
+                    destination_file_node="$",
                 ),
             ],
             destination_file=DestinationFile(

@@ -16,14 +16,14 @@ class SourceFile:
     """
     Synopsis:   A class for handling a source file definition for a build.
     Parameters:
-        source_file_location = a FileLocation object that provides one or more file locations for the build.
-        source_file_root = the jsonpath to the root node to copy from in each source file found.
-        destination_file_content = the jsonpath to the root node to copy to in the destination file.
+        file_location = a FileLocation object that provides one or more file locations for the build.
+        file_node = the jsonpath to the root node to copy from in each source file found.
+        destination_file_node = the jsonpath to the root node to copy to in the destination file.
     """
 
-    source_file_location: FileLocation
-    source_file_root: str
-    destination_file_content: str
+    file_location: FileLocation
+    file_node: str
+    destination_file_node: str
 
     @cached_property
     def retrieved_src_content(self) -> list:
@@ -33,9 +33,9 @@ class SourceFile:
         Returns:    A list of objects that will be merged within the destination file at the specified root node.
         """
         retrieved_src_content = []
-        for src_file in self.source_file_location.resolved_paths:
+        for src_file in self.file_location.resolved_paths:
             src_content = JsonFileType.load_from_file(src_file)
-            jsonpath_expr = parse(self.source_file_root)
+            jsonpath_expr = parse(self.file_node)
             retrieved_src_content.extend(
                 [match.value for match in jsonpath_expr.find(src_content)]
             )
@@ -47,13 +47,13 @@ class DestinationFile:
     """
     Synopsis:   A class for handling the destination file definition for a build.
     Parameters:
-        destination_file_location = a FileLocation object that provides one single file location for the build.
+        file_location = a FileLocation object that provides one single file location for the build.
     """
 
-    destination_file_location: FileLocation
+    file_location: FileLocation
 
     def __post_init__(self):
-        if len(self.destination_file_location.resolved_paths) > 1:
+        if len(self.file_location.resolved_paths) > 1:
             raise Exception(
                 "Attempting to use multiple destination files. We don't support this (yet)!"
             )
@@ -62,12 +62,12 @@ class DestinationFile:
     def file_content(self) -> dict | list:
         return (
             JsonFileType.load_from_file(
-                self.destination_file_location.root_path
-                / self.destination_file_location.substituted_path
+                self.file_location.root_path
+                / self.file_location.substituted_path
             )
             if (
-                self.destination_file_location.root_path
-                / self.destination_file_location.substituted_path
+                self.file_location.root_path
+                / self.file_location.substituted_path
             ).exists()
             else {}
         )
@@ -83,21 +83,21 @@ class BuildConfig:
 
         src_files_match = True
         for src, other_src in zip(self.source_files, other.source_files):
-            if src.source_file_root != other_src.source_file_root:
+            if src.file_node != other_src.source_file_root:
                 src_files_match = False
                 break
             if (
-                src.source_file_location.substituted_path
+                src.file_location.substituted_path
                 != other_src.source_file_location.substituted_path
             ):
                 src_files_match = False
                 break
-            if src.destination_file_content != other_src.destination_file_content:
+            if src.destination_file_node != other_src.destination_file_content:
                 src_files_match = False
                 break
 
         return (
-            self.destination_file.destination_file_location.substituted_path
+            self.destination_file.file_location.substituted_path
             == other.destination_file.destination_file_location.substituted_path
             and self.destination_file.file_content
             == other.destination_file.file_content
@@ -107,13 +107,11 @@ class BuildConfig:
     def generate_new_dest_content(self) -> dict | list:
         """
         Synopsis:   Combines the current state of the desination file with desired source file content
-        Parameters:
-            src = A SourceFile object to be combined at the destination during a build.
-        Returns: The new destination file content. Note the file has not been saved to disk yet.
+        Returns:    The new destination file content. Note the file has not been saved to disk yet.
         """
         dest_content = self.destination_file.file_content
         for src in self.source_files:
-            jsonpath_expr = parse(src.destination_file_content)
+            jsonpath_expr = parse(src.destination_file_node)
             dest_content_matches = [
                 match.value for match in jsonpath_expr.find(dest_content)
             ]
@@ -138,7 +136,7 @@ class BuildConfig:
         JsonFileType.save_to_file(
             content,
             self.root_path
-            / self.destination_file.destination_file_location.substituted_path,
+            / self.destination_file.file_location.substituted_path,
         )
 
     @staticmethod
