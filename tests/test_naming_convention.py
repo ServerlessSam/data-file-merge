@@ -1,4 +1,4 @@
-from src.naming_conventions import (
+from datafilemerge.naming_conventions import (
     ConversionStringParser,
     PascalCase,
     SnakeCase,

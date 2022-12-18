@@ -2,7 +2,7 @@ import re
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
-from src.exceptions import NamingConventionError
+from datafilemerge.exceptions import NamingConventionError
 
 
 @dataclass

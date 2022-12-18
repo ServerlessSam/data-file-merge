@@ -3,8 +3,8 @@ from dataclasses import dataclass, field
 
 from jsonpath_ng import parse
 
-from src.exceptions import ReferenceTypeError
-from src.regex import RegexExtractor
+from datafilemerge.exceptions import ReferenceTypeError
+from datafilemerge.regex import RegexExtractor
 
 
 @dataclass

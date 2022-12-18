@@ -1,9 +1,9 @@
 from pathlib import Path
 
-from src.config import BuildConfig, DestinationFile, SourceFile
-from src.file_location import FileLocation, Substitution
-from src.file_types import JsonFileType
-from src.reference_types import (
+from datafilemerge.config import BuildConfig, DestinationFile, SourceFile
+from datafilemerge.file_location import FileLocation, Substitution
+from datafilemerge.file_types import JsonFileType
+from datafilemerge.reference_types import (
     ContentReferenceType,
     KeyReferenceType,
     LiteralReferenceType,

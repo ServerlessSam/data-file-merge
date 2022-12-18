@@ -1,6 +1,6 @@
 import pytest
 
-from src.reference_types import (
+from datafilemerge.reference_types import (
     ContentReferenceType,
     KeyReferenceType,
     LiteralReferenceType,
