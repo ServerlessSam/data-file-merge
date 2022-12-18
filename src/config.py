@@ -185,6 +185,8 @@ class BuildConfig:
             source_files=source_files, destination_file=dest_file, root_path=root_path
         )
 
-    def build(self):
+    def build(self, save_to_local_file:bool=True):
         content = self.generate_new_dest_content()
-        self.write_content(content)
+        if save_to_local_file:
+            self.write_content(content)
+        return content
