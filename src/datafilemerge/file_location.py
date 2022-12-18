@@ -2,8 +2,8 @@ from dataclasses import dataclass, field
 from functools import cached_property
 from pathlib import Path
 
-from src.reference_types import BaseReferenceType
-from src.regex import RegexExtractor
+from datafilemerge.reference_types import BaseReferenceType
+from datafilemerge.regex import RegexExtractor
 
 
 @dataclass

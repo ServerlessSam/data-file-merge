@@ -1,6 +1,6 @@
 import pytest
 
-from src.regex import RegexExtractor
+from src.datafilemerge.regex import RegexExtractor
 
 
 class TestRegexExtractor:
