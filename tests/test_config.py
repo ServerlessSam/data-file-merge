@@ -109,7 +109,7 @@ class TestConfigs:
         src = SourceFile(src_file_location, "$.AnotherKeyInTheFile", "$")
         dest = DestinationFile(dest_file_location)
         config = BuildConfig([src], dest, Path(__file__).parent.resolve())
-        assert config.generate_new_dest_content() == {
+        assert config.build(save_to_local_file=False) == {
             "Hello": "There",
             "UhOh": "This",
             "OneIs": "Nested",
