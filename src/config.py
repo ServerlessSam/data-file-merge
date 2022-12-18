@@ -62,13 +62,9 @@ class DestinationFile:
     def content(self) -> dict | list:
         return (
             JsonFileType.load_from_file(
-                self.location.root_path
-                / self.location.substituted_path
+                self.location.root_path / self.location.substituted_path
             )
-            if (
-                self.location.root_path
-                / self.location.substituted_path
-            ).exists()
+            if (self.location.root_path / self.location.substituted_path).exists()
             else {}
         )
 
@@ -86,10 +82,7 @@ class BuildConfig:
             if src.node != other_src.node:
                 src_files_match = False
                 break
-            if (
-                src.location.substituted_path
-                != other_src.location.substituted_path
-            ):
+            if src.location.substituted_path != other_src.location.substituted_path:
                 src_files_match = False
                 break
             if src.destination_node != other_src.destination_node:
@@ -99,8 +92,7 @@ class BuildConfig:
         return (
             self.destination_file.location.substituted_path
             == other.destination_file.location.substituted_path
-            and self.destination_file.content
-            == other.destination_file.content
+            and self.destination_file.content == other.destination_file.content
             and src_files_match
         )
 
@@ -135,8 +127,7 @@ class BuildConfig:
         # JsonFileType.save_to_file(content, self.destination_file.destination_file_location.resolved_paths[0])
         JsonFileType.save_to_file(
             content,
-            self.root_path
-            / self.destination_file.location.substituted_path,
+            self.root_path / self.destination_file.location.substituted_path,
         )
 
     @staticmethod
