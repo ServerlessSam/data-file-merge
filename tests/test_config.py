@@ -63,7 +63,7 @@ class TestDestinationFiles:
         )
 
         dest = DestinationFile(dest_file_location)
-        assert dest.file_content == {
+        assert dest.content == {
             "AKeyInTheFile": "A value in the file",
             "AnotherKeyInTheFile": {"UhOh": "This", "OneIs": "Nested"},
         }
@@ -75,7 +75,7 @@ class TestDestinationFiles:
             root_path=Path(__file__).parent.resolve(),
         )
         dest = DestinationFile(dest_file_location)
-        assert dest.file_content == {}
+        assert dest.content == {}
 
 
 class TestSourceFiles:
@@ -159,7 +159,7 @@ class TestConfigs:
         expected_config = BuildConfig(
             source_files=[
                 SourceFile(
-                    file_location=FileLocation(
+                    location=FileLocation(
                         path="test_files_directory/nested_directory/nested_${Sub1}_file_1.json",
                         subs={
                             "Sub1": Substitution(
@@ -168,17 +168,17 @@ class TestConfigs:
                         },
                         root_path=Path(__file__).parent.resolve(),
                     ),
-                    file_node="$.AnotherKeyInTheFile",
-                    destination_file_node="$",
+                    node="$.AnotherKeyInTheFile",
+                    destination_node="$",
                 ),
                 SourceFile(
-                    file_location=FileLocation(
+                    location=FileLocation(
                         path="test_files_directory/nested_directory/nested_${Sub1}_file_2.json",
                         subs={"Sub1": Substitution(LiteralReferenceType(), "test")},
                         root_path=Path(__file__).parent.resolve(),
                     ),
-                    file_node="$.AnotherKeyInTheFile",
-                    destination_file_node="$",
+                    node="$.AnotherKeyInTheFile",
+                    destination_node="$",
                 ),
             ],
             destination_file=DestinationFile(
