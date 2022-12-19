@@ -75,13 +75,13 @@ workflows:
     jobs:
       - create-cli-linux:
           filters:
-            branches:
-              only: main
+            tags:
+              only: /^v*/
       - create-cli-windows:
           filters:
-            branches:
-              only: main
+            tags:
+              only: /^v*/
       - create-cli-mac:
           filters:
-            branches:
-              only: main
+            tags:
+              only: /^v*/
