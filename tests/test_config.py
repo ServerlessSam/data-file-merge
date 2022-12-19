@@ -1,9 +1,9 @@
 from pathlib import Path
 
-from datafilemerge.config import BuildConfig, DestinationFile, SourceFile
-from datafilemerge.file_location import FileLocation, Substitution
-from datafilemerge.file_types import JsonFileType
-from datafilemerge.reference_types import (
+from dfm.config import BuildConfig, DestinationFile, SourceFile
+from dfm.file_location import FileLocation, Substitution
+from dfm.file_types import JsonFileType
+from dfm.reference_types import (
     ContentReferenceType,
     KeyReferenceType,
     LiteralReferenceType,
