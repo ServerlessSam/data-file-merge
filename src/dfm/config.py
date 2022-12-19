@@ -4,11 +4,11 @@ from pathlib import Path
 
 from jsonpath_ng import parse
 
-from datafilemerge.file_location import FileLocation, Substitution
-from datafilemerge.file_types import JsonFileType
-from datafilemerge.json_merger import JsonMergerFactory
-from datafilemerge.reference_types import ReferenceTypeFactory
-from datafilemerge.regex import RegexExtractor
+from dfm.file_location import FileLocation, Substitution
+from dfm.file_types import JsonFileType
+from dfm.json_merger import JsonMergerFactory
+from dfm.reference_types import ReferenceTypeFactory
+from dfm.regex import RegexExtractor
 
 
 @dataclass

@@ -1,6 +1,6 @@
 import pytest
 
-from datafilemerge.regex import RegexExtractor
+from dfm.regex import RegexExtractor
 
 
 class TestRegexExtractor:
