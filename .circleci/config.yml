@@ -84,7 +84,7 @@ workflows:
               only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
             branches:
               ignore: /.*/
-      - create-cli-windows:
+      - create-cli-windows
           # filters:
           #   tags:
           #     only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
