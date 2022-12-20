@@ -59,7 +59,7 @@ jobs:
           name: Build Mac CLI
           command: |
             brew install python@3.11
-            curl -sSL https://install.python-poetry.org | python3 -
+            curl -sSL https://install.python-poetry.org | python3.11 -
             $HOME/.local/bin/poetry install
             $HOME/.local/bin/poetry run pyinstaller src/dfm/cli.py --onefile --name dfm
             zip -r cli-mac.zip dist/dfm 
