@@ -32,7 +32,7 @@ jobs:
           name: Build Windows CLI
           shell: cmd.exe
           command: |
-            choco install pyenv-win -y --force && refreshenv && pyenv install 3.11.0b4 && pyenv global 3.11.0b4 && curl -sSL https://install.python-poetry.org | python - && ..\AppData\Roaming\Python\Scripts\poetry install && ..\AppData\Roaming\Python\Scripts\poetry run pyinstaller src/dfm/cli.py --onefile --name dfm && 7z a ./cli-windows.zip ./dist/
+            choco install pyenv-win -y --force && refreshenv && pyenv install 3.11.0b4 && pyenv global 3.11.0b4 && pyenv shell 3.11.0b4 && curl -sSL https://install.python-poetry.org | python3 - && ..\AppData\Roaming\Python\Scripts\poetry install && ..\AppData\Roaming\Python\Scripts\poetry run pyinstaller src/dfm/cli.py --onefile --name dfm && 7z a ./cli-windows.zip ./dist/
       - store_artifacts:
           path: cli-windows.zip
   create-cli-linux:
