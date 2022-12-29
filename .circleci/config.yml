@@ -32,7 +32,7 @@ jobs:
           name: Build Windows CLI
           shell: cmd.exe
           command: |
-            curl -sSL https://install.python-poetry.org | python - && ..\AppData\Roaming\Python\Scripts\poetry install && ..\AppData\Roaming\Python\Scripts\poetry run pyinstaller src/dfm/cli.py --onefile --name dfm && 7z a ./cli-windows.zip ./dist/
+            choco install pyenv-win -y --force && refreshenv && pyenv install 3.11.0b4 && pyenv global 3.11.0b4 && pyenv shell 3.11.0b4 && curl -sSL https://install.python-poetry.org | python3 - && ..\AppData\Roaming\Python\Scripts\poetry install && ..\AppData\Roaming\Python\Scripts\poetry run pyinstaller src/dfm/cli.py --onefile --name dfm && 7z a ./cli-windows.zip ./dist/
       - store_artifacts:
           path: cli-windows.zip
   create-cli-linux:
@@ -59,7 +59,7 @@ jobs:
           name: Build Mac CLI
           command: |
             brew install python@3.11
-            curl -sSL https://install.python-poetry.org | python3 -
+            curl -sSL https://install.python-poetry.org | python3.11 -
             $HOME/.local/bin/poetry install
             $HOME/.local/bin/poetry run pyinstaller src/dfm/cli.py --onefile --name dfm
             zip -r cli-mac.zip dist/dfm 
@@ -75,13 +75,19 @@ workflows:
     jobs:
       - create-cli-linux:
           filters:
+            tags:
+              only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
             branches:
-              only: main
+              ignore: /.*/
       - create-cli-windows:
           filters:
+            tags:
+              only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
             branches:
-              only: main
+              ignore: /.*/
       - create-cli-mac:
           filters:
+            tags:
+              only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
             branches:
-              only: main
+              ignore: /.*/

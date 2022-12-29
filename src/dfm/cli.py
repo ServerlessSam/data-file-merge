@@ -3,8 +3,8 @@ import os
 import platform
 from pathlib import Path
 
-from src.config import BuildConfig
-from src.version import __version__
+from dfm.config import BuildConfig
+from dfm.version import __version__
 
 
 def parse_parameter_string(param_str: str) -> dict:
