@@ -2,6 +2,7 @@
 from pathlib import Path
 
 from setuptools import find_packages, setup
+
 from src.dfm.version import __version__
 
 this_directory = Path(__file__).parent
