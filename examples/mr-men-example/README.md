@@ -1,6 +1,8 @@
 # Mr Men Examples
  You have been given a set of data on various 'Mr Men' and 'Little Miss' characters. You need to combine the required data into a single file
 
+ For both examples, you can see the merged file at `found.json`, in the same directory as this README.
+
  ## Example 1
  This example requires a `parameter`. The key is `Adjective` and the value is an the adjective you'd like to be the character's surname.
 

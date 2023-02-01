@@ -16,7 +16,7 @@
     ],
     "DestinationFile" : {
         "DestinationFileLocation" : {
-            "Path" : "characters/found.json"
+            "Path" : "found.json"
         }
     }
 }

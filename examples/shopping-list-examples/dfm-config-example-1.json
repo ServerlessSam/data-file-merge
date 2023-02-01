@@ -10,7 +10,7 @@
     ],
     "DestinationFile" : {
         "DestinationFileLocation" : {
-            "Path" : "shopping-lists/complete_list.json"
+            "Path" : "complete_list.json"
         }
     }
 }
