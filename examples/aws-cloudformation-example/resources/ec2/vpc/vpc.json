@@ -1,0 +1,10 @@
+{
+    "Vpc": {
+        "Type": "AWS::EC2::VPC",
+        "Properties": {
+            "CidrBlock": "10.0.0.0/20",
+            "EnableDnsHostnames": true,
+            "EnableDnsSupport": true
+        }
+    }
+}

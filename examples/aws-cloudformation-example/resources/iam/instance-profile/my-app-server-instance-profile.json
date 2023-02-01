@@ -1,0 +1,13 @@
+{
+    "MyAppServerInstanceProfile" : {
+        "Type" : "AWS::IAM::InstanceProfile",
+        "Properties" : {
+            "InstanceProfileName" : "MyAppServerInstanceProfile",
+            "Roles" : [
+                {
+                    "Ref" : "MyAppServerRole"
+                }
+            ]
+          }
+      }
+}

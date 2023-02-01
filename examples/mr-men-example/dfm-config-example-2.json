@@ -1,0 +1,23 @@
+{
+    "SourceFiles" : [
+        {
+            "SourceFileLocation" : {
+                "Path" : "characters/mr-*.json"
+            },
+            "SourceFileNode" : "$.SkinColour",
+            "DestinationFileNode" : "$.Male.SkinColours"
+        },
+        {
+            "SourceFileLocation" : {
+                "Path" : "characters/little-miss-*.json"
+            },
+            "SourceFileNode" : "$.SkinColour",
+            "DestinationFileNode" : "$.Female.SkinColours"
+        }
+    ],
+    "DestinationFile" : {
+        "DestinationFileLocation" : {
+            "Path" : "characters/found.json"
+        }
+    }
+}

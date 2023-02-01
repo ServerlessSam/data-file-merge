@@ -1,0 +1,16 @@
+{
+    "MyAppServer" : {
+        "Type" : "AWS::EC2::Instance",
+        "Properties" : {
+            "IamInstanceProfile" : {
+                "Ref": "MyAppServerInstanceProfile"
+            },
+            "ImageId" : "ami-0559e315bc0eb2e58",
+            "InstanceType" : "t3.micro",
+            "SubnetId" : {
+                "Ref" : "PublicSubnet"
+            }
+          }
+      }
+      
+}
