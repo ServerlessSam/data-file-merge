@@ -1,8 +1,8 @@
 from abc import ABC
 from copy import deepcopy
 from dataclasses import dataclass
-from types import NoneType
 
+NoneType = type(None)
 
 @dataclass
 class BaseJsonMerger(ABC):
