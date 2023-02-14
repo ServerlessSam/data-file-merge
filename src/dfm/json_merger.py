@@ -147,7 +147,7 @@ class DictJsonMerger(BaseJsonMerger):
                 clashing_json_obj_value_merger.merge_obj(the_dict[key])
                 the_dict[key] = clashing_json_obj_value_merger.json_obj
         json_obj_copy = deepcopy(self.json_obj)
-        self.json_obj = json_obj_copy | the_dict
+        self.json_obj = {**json_obj_copy, **the_dict}
 
 
 @dataclass
