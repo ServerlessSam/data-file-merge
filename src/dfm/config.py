@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from functools import cached_property
 from pathlib import Path
+from typing import List
 
 from jsonpath_ng import parse
 
@@ -26,7 +27,7 @@ class SourceFile:
     destination_node: str
 
     @cached_property
-    def retrieved_src_content(self) -> list:
+    def retrieved_src_content(self) -> List:
         """
         Synopsis:   Retrieves the content (from the specified node downwards)
                     for all files that are found at the specified file location.
@@ -59,7 +60,7 @@ class DestinationFile:
             )
 
     @cached_property
-    def content(self) -> dict or list:
+    def content(self) -> dict or List:
         return (
             JsonFileType.load_from_file(
                 self.location.root_path / self.location.substituted_path
@@ -71,7 +72,7 @@ class DestinationFile:
 
 @dataclass
 class BuildConfig:
-    source_files: list[SourceFile]
+    source_files: List[SourceFile]
     destination_file: DestinationFile
     root_path: Path
 
@@ -96,7 +97,7 @@ class BuildConfig:
             and src_files_match
         )
 
-    def generate_new_dest_content(self) -> dict or list:
+    def generate_new_dest_content(self) -> dict or List:
         """
         Synopsis:   Combines the current state of the desination file with desired source file content
         Returns:    The new destination file content. Note the file has not been saved to disk yet.

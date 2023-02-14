@@ -1,6 +1,7 @@
 import re
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
+from typing import List
 
 from dfm.exceptions import NamingConventionError
 
@@ -15,7 +16,7 @@ class BaseNamingConvention(ABC):
 
     regex = None
 
-    def convert_to_list(self, string_to_convert: str) -> list[str]:
+    def convert_to_list(self, string_to_convert: str) -> List[str]:
         """
         Synopsis:   runs a regex against a string and puts all matches in a lowercase list
         Parameters:
@@ -31,7 +32,7 @@ class BaseNamingConvention(ABC):
         return lowercase_string_list
 
     @abstractmethod
-    def convert_from_list(self, list_to_convert: list[str]) -> str:
+    def convert_from_list(self, list_to_convert: List[str]) -> str:
         raise NotImplementedError()
 
 
@@ -66,7 +67,7 @@ class SnakeCase(BaseNamingConvention):
 
     regex = r"(?=(?<=^)|(?<=_))[^A-Z\s]*?(?=_|$)"
 
-    def convert_to_list(self, string_to_convert: str) -> list[str]:
+    def convert_to_list(self, string_to_convert: str) -> List[str]:
         """
         Synopsis:   runs a regex against a string and puts all matches in a lowercase list
         Parameters:
@@ -88,7 +89,7 @@ class SnakeCase(BaseNamingConvention):
             raise NamingConventionError("String was not split correctly.")
         return strings_found
 
-    def convert_from_list(self, list_to_convert: list[str]) -> str:
+    def convert_from_list(self, list_to_convert: List[str]) -> str:
         """
         Synopsis:   Converts a lowercase list of strings to a single snake case string
         Parameters:
@@ -108,7 +109,7 @@ class CamelCase(BaseNamingConvention):
 
     regex = r"[A-Z][^A-Z\s]*|^[^A-Z\s]*"
 
-    def convert_from_list(self, list_to_convert: list[str]) -> str:
+    def convert_from_list(self, list_to_convert: List[str]) -> str:
         """
         Synopsis:   Converts a lowercase list of strings to a single camel case string
         Parameters:
@@ -130,10 +131,10 @@ class UpperCase(BaseNamingConvention):
     Synopsis:   The naming convention class for upper case
     """
 
-    def convert_to_list(self, string_to_convert: str) -> list[str]:
+    def convert_to_list(self, string_to_convert: str) -> List[str]:
         return [string_to_convert.lower()]
 
-    def convert_from_list(self, list_to_convert: list[str]) -> str:
+    def convert_from_list(self, list_to_convert: List[str]) -> str:
         to_return = ""
         for string in list_to_convert:
             to_return += string.upper()
@@ -146,10 +147,10 @@ class LowerCase(BaseNamingConvention):
     Synopsis:   The naming convention class for lower case
     """
 
-    def convert_to_list(self, string_to_convert: str) -> list[str]:
+    def convert_to_list(self, string_to_convert: str) -> List[str]:
         return [string_to_convert.lower()]
 
-    def convert_from_list(self, list_to_convert: list[str]) -> str:
+    def convert_from_list(self, list_to_convert: List[str]) -> str:
         to_return = ""
         for string in list_to_convert:
             to_return += string.lower()

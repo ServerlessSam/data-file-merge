@@ -2,6 +2,8 @@ from dataclasses import dataclass, field
 from functools import cached_property
 from pathlib import Path
 
+from typing import List
+
 from dfm.reference_types import BaseReferenceType
 from dfm.regex import RegexExtractor
 
@@ -52,7 +54,7 @@ class FileLocation:
     )  # TODO I want this to be dict(Substitution) but I was getting an error that the object was not itterable.
 
     @cached_property
-    def resolved_paths(self) -> list[Path]:
+    def resolved_paths(self) -> List[Path]:
         """
         Synopsis:   Resolves all substitutions against the path string
                     then finds all local files matching this path.
