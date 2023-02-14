@@ -4,6 +4,7 @@ from dataclasses import dataclass
 
 NoneType = type(None)
 
+
 @dataclass
 class BaseJsonMerger(ABC):
     """

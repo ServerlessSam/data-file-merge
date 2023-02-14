@@ -1,7 +1,6 @@
 from dataclasses import dataclass, field
 from functools import cached_property
 from pathlib import Path
-
 from typing import List
 
 from dfm.reference_types import BaseReferenceType
