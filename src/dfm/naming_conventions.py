@@ -47,7 +47,7 @@ class PascalCase(BaseNamingConvention):
 
     regex = r"[A-Z][^A-Z\s]*"
 
-    def convert_from_list(self, list_to_convert: list[str]) -> str:
+    def convert_from_list(self, list_to_convert: List[str]) -> str:
         """
         Synopsis:   Converts a lowercase list of strings to a single pascal case string
         Parameters:
