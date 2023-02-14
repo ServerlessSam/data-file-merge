@@ -12,7 +12,7 @@ class BaseFileType(ABC):
         raise NotImplementedError("load_from_file has not been implemented yet")
 
     @abstractmethod
-    def save_to_file(self, json_object: dict | list, file_path: Path):
+    def save_to_file(self, json_object: dict or list, file_path: Path):
         raise NotImplementedError("save_to_file has not been implemented yet")
 
 
@@ -24,6 +24,6 @@ class JsonFileType(BaseFileType):
         return obj
 
     @classmethod
-    def save_to_file(cls, json_object: dict | list, file_path: Path):
+    def save_to_file(cls, json_object: dict or list, file_path: Path):
         with open(file_path, "w+") as output:
             json.dump(json_object, output, indent=4)

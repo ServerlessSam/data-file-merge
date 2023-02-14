@@ -1,7 +1,8 @@
 from abc import ABC
 from copy import deepcopy
 from dataclasses import dataclass
-from types import NoneType
+
+NoneType = type(None)
 
 
 @dataclass
@@ -43,7 +44,7 @@ class BaseJsonMerger(ABC):
     def merge_a_none(self, the_none: NoneType):
         pass
 
-    def merge_obj(self, the_obj: list | int | dict | str):
+    def merge_obj(self, the_obj: list or int or dict or str):
         """
         Synopsis:   Inspects the object to merge in order to determing what merge function to use. Then use said function.
                     This should be the primary way of using JSON mergers rather than a specific merge_a_*() function itself.
@@ -147,7 +148,7 @@ class DictJsonMerger(BaseJsonMerger):
                 clashing_json_obj_value_merger.merge_obj(the_dict[key])
                 the_dict[key] = clashing_json_obj_value_merger.json_obj
         json_obj_copy = deepcopy(self.json_obj)
-        self.json_obj = json_obj_copy | the_dict
+        self.json_obj = {**json_obj_copy, **the_dict}
 
 
 @dataclass
@@ -169,7 +170,7 @@ class NoneJsonMerger(BaseJsonMerger):
         json_obj: The string to merge into. (Should be 'None')
     """
 
-    json_obj: list | int | dict | str | NoneType
+    json_obj: list or int or dict or str or NoneType
 
     def merge_a_list(self, the_list: list):
         """
@@ -213,7 +214,7 @@ class JsonMergerFactory:
     Returns: An initialised JsonMerger object of the correct type.
     """
 
-    json_to_merge_into: list | int | dict | str | NoneType
+    json_to_merge_into: list or int or dict or str or NoneType
 
     def generate_json_merger(self):
         for obj_type, type_merger in zip(

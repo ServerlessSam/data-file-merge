@@ -12,7 +12,7 @@ class RegexExtractor:
     """
 
     expression: str
-    capture_group: str | int
+    capture_group: str or int
 
     def resolve(self, string_input: str) -> str:
         """

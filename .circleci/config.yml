@@ -3,6 +3,18 @@ orbs:
   python: circleci/python@2.1.1
   win: circleci/windows@5.0
   macos: circleci/macos@2
+
+commands:
+  unit-test:
+    description: "Runs the generic pytest testing command"
+    steps:
+      - checkout
+      - python/install-packages:
+         pkg-manager: poetry
+      - run:
+         name: Run tests
+         command: poetry run pytest
+
 jobs:
   format:
     docker:
@@ -14,16 +26,27 @@ jobs:
       - run:
          name: Format Checking
          command: poetry run make format-check
-  test:
+  test-311:
     docker:
       - image: cimg/python:3.11
     steps:
-      - checkout
-      - python/install-packages:
-         pkg-manager: poetry
-      - run:
-         name: Run tests
-         command: poetry run pytest
+      - unit-test
+  test-310:
+    docker:
+      - image: cimg/python:3.10
+    steps:
+      - unit-test
+  test-39:
+    docker:
+      - image: cimg/python:3.9
+    steps:
+      - unit-test
+  test-38:
+    docker:
+      - image: cimg/python:3.8
+    steps:
+      - unit-test
+
   create-cli-windows:
     executor: win/default
     steps:
@@ -70,7 +93,12 @@ workflows:
   lint-and-test:
     jobs:
       - format
-      - test
+      - test-311
+  regression-test:
+    jobs:
+      - test-38
+      - test-39
+      - test-310
   create-cli:
     jobs:
       - create-cli-linux:
