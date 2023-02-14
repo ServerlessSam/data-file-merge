@@ -46,7 +46,7 @@ jobs:
       - image: cimg/python:3.8
     steps:
       - unit-test
-      
+
   create-cli-windows:
     executor: win/default
     steps:

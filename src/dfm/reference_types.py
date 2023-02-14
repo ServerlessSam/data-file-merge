@@ -14,7 +14,7 @@ class BaseReferenceType(ABC):
     """
 
     parameters: dict = field(default_factory=dict)
-    file_content: dict | list = None
+    file_content: dict or list = None
 
     @abstractmethod
     def evaluate(self, value: str, **kwargs) -> str:

@@ -59,7 +59,7 @@ class DestinationFile:
             )
 
     @cached_property
-    def content(self) -> dict | list:
+    def content(self) -> dict or list:
         return (
             JsonFileType.load_from_file(
                 self.location.root_path / self.location.substituted_path
@@ -96,7 +96,7 @@ class BuildConfig:
             and src_files_match
         )
 
-    def generate_new_dest_content(self) -> dict | list:
+    def generate_new_dest_content(self) -> dict or list:
         """
         Synopsis:   Combines the current state of the desination file with desired source file content
         Returns:    The new destination file content. Note the file has not been saved to disk yet.
