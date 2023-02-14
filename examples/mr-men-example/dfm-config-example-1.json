@@ -1,0 +1,22 @@
+{
+    "SourceFiles" : [
+        {
+            "SourceFileLocation" : {
+                "Path" : "characters/*-${Surname}.json",
+                "PathSubs" : {
+                    "Surname" : {
+                        "Type" : "Parameter",
+                        "Value" : "Adjective"
+                    }
+                }
+            },
+            "SourceFileNode" : "$",
+            "DestinationFileNode" : "$.CharactersFound"
+        }
+    ],
+    "DestinationFile" : {
+        "DestinationFileLocation" : {
+            "Path" : "found.json"
+        }
+    }
+}

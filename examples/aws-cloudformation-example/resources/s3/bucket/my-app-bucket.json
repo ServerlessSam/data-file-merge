@@ -1,0 +1,8 @@
+{
+    "MyAppBucket" : {
+        "Type" : "AWS::S3::Bucket",
+        "Properties" : {
+            "BucketName" : "MyAppBucket"
+          }
+      }
+}

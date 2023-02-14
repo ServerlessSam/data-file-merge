@@ -1,0 +1,23 @@
+{
+    "SourceFiles" : [
+        {
+            "SourceFileLocation" : {
+                "Path" : "shopping-lists/*.json"
+            },
+            "SourceFileNode" : "$.ToBuy",
+            "DestinationFileNode" : "$.ToBuy"
+        },
+        {
+            "SourceFileLocation" : {
+                "Path" : "shopping-lists/grandparents/*.json"
+            },
+            "SourceFileNode" : "$.ToBuy",
+            "DestinationFileNode" : "$.ToBuyForGrandparents"
+        }
+    ],
+    "DestinationFile" : {
+        "DestinationFileLocation" : {
+            "Path" : "complete_list.json"
+        }
+    }
+}

@@ -1,0 +1,6 @@
+{
+    "AWSTemplateFormatVersion":"2010-09-09",
+    "Description":"This is an example template for data-file-merge",
+    "Resources":{},
+    "Outputs":{}
+ }

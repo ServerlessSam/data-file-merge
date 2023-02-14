@@ -1,0 +1,23 @@
+{
+    "SourceFiles" : [
+        {
+            "SourceFileLocation" : {
+                "Path" : "resourceless-template.json"
+            },
+            "SourceFileRoot" : "$",
+            "DestinationFileContent" : "$"
+        },
+        {
+            "SourceFileLocation" : {
+                "Path" : "resources/**/*.json"
+            },
+            "SourceFileRoot" : "$",
+            "DestinationFileContent" : "$.Resources"
+        }
+    ],
+    "DestinationFile" : {
+        "DestinationFileLocation" : {
+            "Path" : "complete-template.json"
+        }
+    }
+}
