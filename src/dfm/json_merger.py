@@ -107,13 +107,14 @@ class ListJsonMerger(BaseJsonMerger):
         """
         self.json_obj.append(the_str)
 
-    def merge_a_bool(self, the_bool:bool):
+    def merge_a_bool(self, the_bool: bool):
         """
         Synopsis: Appends the list with the bool.
         Parameters:
             the_bool: The bool to merge in.
         """
         self.json_obj.append(the_bool)
+
 
 @dataclass
 class IntJsonMerger(BaseJsonMerger):
@@ -173,6 +174,7 @@ class StrJsonMerger(BaseJsonMerger):
 
     json_obj: str
 
+
 @dataclass
 class BoolJsonMerger(BaseJsonMerger):
     """
@@ -226,13 +228,14 @@ class NoneJsonMerger(BaseJsonMerger):
         """
         self.json_obj = the_str
 
-    def merge_a_bool(self, the_bool:bool):
+    def merge_a_bool(self, the_bool: bool):
         """
         Synopsis: Replaces the NoneType object with the bool.
         Parameters:
             the_bool: The bool to merge in.
         """
         self.json_obj = the_bool
+
 
 @dataclass
 class JsonMergerFactory:
