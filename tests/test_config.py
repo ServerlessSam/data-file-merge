@@ -111,6 +111,7 @@ class TestConfigs:
         config = BuildConfig([src], dest, Path(__file__).parent.resolve())
         assert config.build(save_to_local_file=False) == {
             "Hello": "There",
+            "ThisIs": True,
             "UhOh": "This",
             "OneIs": "Nested",
             "UhOh2": "This",
@@ -142,6 +143,7 @@ class TestConfigs:
             )
         ) == {
             "Hello": "There",
+            "ThisIs": True,
             "UhOh": "This",
             "OneIs": "Nested",
             "UhOh2": "This",

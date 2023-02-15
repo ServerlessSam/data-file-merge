@@ -20,6 +20,7 @@ class BaseJsonMerger(ABC):
             (int, self.merge_an_int),
             (dict, self.merge_a_dict),
             (str, self.merge_a_str),
+            (bool, self.merge_a_bool),
             (NoneType, self.merge_a_none),
         )
 
@@ -43,6 +44,10 @@ class BaseJsonMerger(ABC):
 
     def merge_a_none(self, the_none: NoneType):
         pass
+
+    def merge_a_bool(self, the_bool: bool):
+        self.json_obj = [self.json_obj]
+        self.json_obj.append(the_bool)
 
     def merge_obj(self, the_obj: list or int or dict or str):
         """
@@ -102,6 +107,13 @@ class ListJsonMerger(BaseJsonMerger):
         """
         self.json_obj.append(the_str)
 
+    def merge_a_bool(self, the_bool:bool):
+        """
+        Synopsis: Appends the list with the bool.
+        Parameters:
+            the_bool: The bool to merge in.
+        """
+        self.json_obj.append(the_bool)
 
 @dataclass
 class IntJsonMerger(BaseJsonMerger):
@@ -161,6 +173,16 @@ class StrJsonMerger(BaseJsonMerger):
 
     json_obj: str
 
+@dataclass
+class BoolJsonMerger(BaseJsonMerger):
+    """
+    Synopsis: A class for merging into a boolean.
+    Parameters:
+        json_obj: The string to merge into.
+    """
+
+    json_obj: bool
+
 
 @dataclass
 class NoneJsonMerger(BaseJsonMerger):
@@ -204,6 +226,13 @@ class NoneJsonMerger(BaseJsonMerger):
         """
         self.json_obj = the_str
 
+    def merge_a_bool(self, the_bool:bool):
+        """
+        Synopsis: Replaces the NoneType object with the bool.
+        Parameters:
+            the_bool: The bool to merge in.
+        """
+        self.json_obj = the_bool
 
 @dataclass
 class JsonMergerFactory:
@@ -214,21 +243,22 @@ class JsonMergerFactory:
     Returns: An initialised JsonMerger object of the correct type.
     """
 
-    json_to_merge_into: list or int or dict or str or NoneType
+    json_to_merge_into: list or int or dict or str or bool or NoneType
 
     def generate_json_merger(self):
         for obj_type, type_merger in zip(
-            [list, int, dict, str, NoneType],
+            [list, int, dict, str, bool, NoneType],
             [
                 ListJsonMerger,
                 IntJsonMerger,
                 DictJsonMerger,
                 StrJsonMerger,
+                BoolJsonMerger,
                 NoneJsonMerger,
             ],
         ):
             if type(self.json_to_merge_into) == obj_type:
                 return type_merger(self.json_to_merge_into)
         raise TypeError(
-            f"Json object for merging was not one of the 4 expected types (list, int, dict, str). Instead it was {str(type(self.json_to_merge_into))}"
+            f"Json object for merging was not one of the 5 expected types (list, int, dict, bool, str). Instead it was {str(type(self.json_to_merge_into))}"
         )
