@@ -194,32 +194,32 @@ class BuildConfig:
 
 @dataclass
 class SplitConfig: 
-    source_file: SourceFile
-    destination_files: List[DestinationFile]
+    source_file: DestinationFile
+    destination_files: List[SourceFile]
     root_path: Path
 
-    def generate_new_dest_content(self) -> dict or List:
+    def generate_new_dest_content(self) -> List:
         """
         Synopsis:   Combines the current state of the desination file with desired source file content
         Returns:    The new destination file content. Note the file has not been saved to disk yet.
         """
-        dest_content = self.destination_file.content
-        for src in self.source_files:
-            jsonpath_expr = parse(src.destination_node)
-            dest_content_matches = [
-                match.value for match in jsonpath_expr.find(dest_content)
+        src_content = self.source_file.content
+        for dest in self.destination_files:
+            jsonpath_expr = parse(dest.destination_node)
+            src_content_matches = [
+                match.value for match in jsonpath_expr.find(src_content)
             ]
-            if dest_content_matches == []:
-                dest_content_matches = [None]
-            for destination_match in dest_content_matches:
-                for src_content in src.retrieved_src_content:
-                    dest_json_merger = JsonMergerFactory(
-                        destination_match
+            if src_content_matches == []:
+                src_content_matches = [None]
+            for source_match in src_content_matches:
+                for dest_content in dest.retrieved_src_content:
+                    src_json_merger = JsonMergerFactory(
+                        source_match
                     ).generate_json_merger()
-                    dest_json_merger.merge_obj(src_content)
-                    destination_match = dest_json_merger.json_obj
+                    src_json_merger.merge_obj(dest_content)
+                    source_match = src_json_merger.json_obj
                     dest_content = jsonpath_expr.update_or_create(
-                        dest_content, dest_json_merger.json_obj
+                        dest_content, src_json_merger.json_obj
                     )
         return dest_content
 
@@ -241,11 +241,11 @@ class SplitConfig:
         if parameters is None:
             parameters = {}
         config_dict = JsonFileType.load_from_file(file_path)
-        source_files = []
-        for src in config_dict["SourceFiles"]:
+        dest_files = []
+        for dest in config_dict["DestinationFiles"]:
             subs = {}
-            if "PathSubs" in src["SourceFileLocation"]:
-                for sub_key, sub_dict in src["SourceFileLocation"]["PathSubs"].items():
+            if "PathSubs" in dest["DestinationFileLocation"]:
+                for sub_key, sub_dict in dest["DestinationFileLocation"]["PathSubs"].items():
                     reference_type = ReferenceTypeFactory(sub_dict["Type"]).generate()
                     regex = RegexExtractor.parse_from_sub_dict(sub_dict)
                     subs[sub_key] = Substitution(
@@ -255,36 +255,36 @@ class SplitConfig:
                         sub_dict["Value"],
                         regex,
                     )
-            source_files.append(
-                SourceFile(
-                    FileLocation(src["SourceFileLocation"]["Path"], root_path, subs),
-                    src["SourceFileNode"],
-                    src["DestinationFileNode"],
+            dest_files.append(
+                SourceFile( # This is not a bug, we can actually use the SourceFile class here as a destination file when splitting
+                    FileLocation(dest["DestinationFileLocation"]["Path"], root_path, subs),
+                    dest["SourceFileNode"],
+                    dest["DestinationFileNode"],
                 )
             )
-        dest_subs = {}
-        if "PathSubs" in config_dict["DestinationFile"]["DestinationFileLocation"]:
-            for sub_key, sub_dict in config_dict["DestinationFile"][
-                "DestinationFileLocation"
+        src_subs = {}
+        if "PathSubs" in config_dict["SourceFile"]["SourceFileLocation"]:
+            for sub_key, sub_dict in config_dict["SourceFile"][
+                "SourceFileLocation"
             ]["PathSubs"].items():
                 reference_type = ReferenceTypeFactory(sub_dict["Type"]).generate()
                 regex = RegexExtractor.parse_from_sub_dict(sub_dict)
-                dest_subs[sub_key] = Substitution(
+                src_subs[sub_key] = Substitution(
                     reference_type(
                         parameters, None
                     ),  # TODO support reading from content
                     sub_dict["Value"],
                     regex,
                 )
-        dest_file = DestinationFile(
+        src_file = DestinationFile( # See comment above, we can use DestinationFile as a source file in splitting
             FileLocation(
-                config_dict["DestinationFile"]["DestinationFileLocation"]["Path"],
+                config_dict["SourceFile"]["SourceFileLocation"]["Path"],
                 root_path,
-                dest_subs,
+                src_subs,
             )
         )
-        return BuildConfig(
-            source_files=source_files, destination_file=dest_file, root_path=root_path
+        return SplitConfig(
+            source_file=src_file, destination_files=dest_files, root_path=root_path
         )
     
     def split(self, save_to_local_file: bool = True):

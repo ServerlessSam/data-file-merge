@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from dfm.config import BuildConfig, DestinationFile, SourceFile
+from dfm.config import BuildConfig, SplitConfig, DestinationFile, SourceFile
 from dfm.file_location import FileLocation, Substitution
 from dfm.file_types import JsonFileType
 from dfm.reference_types import (
@@ -92,7 +92,7 @@ class TestSourceFiles:
         ]
 
 
-class TestConfigs:
+class TestBuildConfigs:
     def test_configs(self):
         src_file_location = FileLocation(
             path="test_files_directory/${Sub1}/nested_test_file_*.json",
@@ -110,6 +110,123 @@ class TestConfigs:
         dest = DestinationFile(dest_file_location)
         config = BuildConfig([src], dest, Path(__file__).parent.resolve())
         assert config.build(save_to_local_file=False) == {
+            "Hello": "There",
+            "ThisIs": True,
+            "UhOh": "This",
+            "OneIs": "Nested",
+            "UhOh2": "This",
+            "OneIs2": "NestedAlso",
+        }
+
+    def test_config_build(self):
+        src_file_location = FileLocation(
+            path="test_files_directory/${Sub1}/nested_test_file_*.json",
+            subs={"Sub1": Substitution(LiteralReferenceType(), "nested_directory")},
+            root_path=Path(__file__).parent.resolve(),
+        )
+        src = SourceFile(src_file_location, "$.AnotherKeyInTheFile", "$")
+
+        dest_file_location = FileLocation(
+            path="test_files_directory/${Sub1}/build_test_merged_file.json",
+            subs={"Sub1": Substitution(LiteralReferenceType(), "nested_directory")},
+            root_path=Path(__file__).parent.resolve(),
+        )
+        src = SourceFile(src_file_location, "$.AnotherKeyInTheFile", "$")
+        dest = DestinationFile(dest_file_location)
+        config = BuildConfig([src], dest, Path(__file__).parent.resolve())
+        config.build()
+
+        assert JsonFileType.load_from_file(
+            str(
+                Path(__file__).parent.resolve()
+                / "test_files_directory/nested_directory/build_test_merged_file.json"
+            )
+        ) == {
+            "Hello": "There",
+            "ThisIs": True,
+            "UhOh": "This",
+            "OneIs": "Nested",
+            "UhOh2": "This",
+            "OneIs2": "NestedAlso",
+        }
+
+    """
+    Commenting out the following test because we still need to include full paths in FileLocation in config files (minus the prefix '/').
+    This causes a problem because running unit tests locally vs running them in CI/CD will need the paths to be entirely different.
+    TODO Re-add this test once we complete https://github.com/ServerlessSam/data-file-merge/issues/10
+    """
+
+    def test_config_load(self):
+        parameters = {"TheWordTest": "test"}
+        expected_config = BuildConfig(
+            source_files=[
+                SourceFile(
+                    location=FileLocation(
+                        path="test_files_directory/nested_directory/nested_${Sub1}_file_1.json",
+                        subs={
+                            "Sub1": Substitution(
+                                ParameterReferenceType(parameters), "TheWordTest"
+                            )
+                        },
+                        root_path=Path(__file__).parent.resolve(),
+                    ),
+                    node="$.AnotherKeyInTheFile",
+                    destination_node="$",
+                ),
+                SourceFile(
+                    location=FileLocation(
+                        path="test_files_directory/nested_directory/nested_${Sub1}_file_2.json",
+                        subs={"Sub1": Substitution(LiteralReferenceType(), "test")},
+                        root_path=Path(__file__).parent.resolve(),
+                    ),
+                    node="$.AnotherKeyInTheFile",
+                    destination_node="$",
+                ),
+            ],
+            destination_file=DestinationFile(
+                FileLocation(
+                    path="test_files_directory/nested_directory/build_test_merged_file.json",
+                    root_path=Path(__file__).parent.resolve(),
+                )
+            ),
+            root_path=Path(__file__).parent.resolve(),
+        )
+        generated_config = BuildConfig.load_config_from_file(
+            file_path=str(
+                Path(__file__).parent.resolve()
+                / "test_files_directory/nested_directory/build_test_config.json"
+            ),
+            parameters=parameters,
+            root_path=Path(__file__).parent.resolve(),
+        )
+        assert expected_config == generated_config
+
+
+class TestSplitConfigs:
+    def test_configs(self):
+        src_file_location = FileLocation(
+            path="test_files_directory/${Sub1}/nested_test_file.json",
+            subs={"Sub1": Substitution(LiteralReferenceType(), "nested_split_directory")},
+            root_path=Path(__file__).parent.resolve(),
+        )
+
+        # TODO: this leave changes in build_test_merged_file after test suite runs. Should be doing this in memory
+        dest_file_location = FileLocation(
+            path="test_files_directory/${Sub1}/split_file_${Sub2}.json",
+            subs={
+                "Sub1": Substitution(LiteralReferenceType(), "nested_split_directory"),
+                "Sub2": Substitution(ContentReferenceType(
+                    parameters={},
+                    file_content={}
+                ), "$.foo"
+                )
+            },
+            root_path=Path(__file__).parent.resolve(),
+        )
+        src = DestinationFile(src_file_location)
+        dest = SourceFile(dest_file_location, "$", "$")
+        config = SplitConfig(src, [dest], Path(__file__).parent.resolve())
+        assert config.split(save_to_local_file=False) == {
             "Hello": "There",
             "ThisIs": True,
             "UhOh": "This",

@@ -11,6 +11,10 @@ from dfm.regex import RegexExtractor
 class BaseReferenceType(ABC):
     """
     Synopsis:   A base class for all reference types to inherit
+    Parameters:
+        parameters = a key-value dictionary of the parameters used when triggering the build/split
+        #TODO we should get these in a better way I think.
+        file_content = dictionary/list form of a json file
     """
 
     parameters: dict = field(default_factory=dict)
@@ -29,6 +33,7 @@ class ParameterReferenceType(BaseReferenceType):
     Parameters:
         parameters = a key-value dictionary of the parameters used when triggering the build/split
         #TODO we should get these in a better way I think.
+        file_content = dictionary/list form of a json file
     """
 
     def evaluate(self, value: str, regex: str = None) -> str:
@@ -49,6 +54,8 @@ class ContentReferenceType(BaseReferenceType):
     Synopsis:   A class for the 'Content' reference type.
                 This will retrieve a string/int from a dict/list using jsonpath.
     Parameters:
+        parameters = a key-value dictionary of the parameters used when triggering the build/split
+        #TODO we should get these in a better way I think.
         file_content = dictionary/list form of a json file
     """
 
@@ -86,6 +93,8 @@ class KeyReferenceType(BaseReferenceType):
     Synopsis:   A class for the "Key" reference type.
                 This will retrieve a key's name using jsonpath
     Parameters:
+        parameters = a key-value dictionary of the parameters used when triggering the build/split
+        #TODO we should get these in a better way I think.
         file_content = dictionary/list form of a json file
     """
 
@@ -121,6 +130,10 @@ class LiteralReferenceType(BaseReferenceType):
     """
     Synopsis:   A class for the "Literal" reference type
                 This will blindly use the string given as the value.
+    Parameters:
+        parameters = a key-value dictionary of the parameters used when triggering the build/split
+        #TODO we should get these in a better way I think.
+        file_content = dictionary/list form of a json file
     """
 
     def evaluate(self, value: str, regex: RegexExtractor = None) -> str:

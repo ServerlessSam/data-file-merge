@@ -26,6 +26,35 @@ class TestParameterReferenceType:
             == "Value1"
         )
 
+class TestKeyReferenceType:
+    def test_key_reference_type(self):
+        assert(
+            KeyReferenceType(
+                parameters={"Key1": "Value1", "Key2": "Value2"},
+                file_content={
+                    "Root": {
+                        "foo": 1,
+                        "bar": 2
+                    }
+                }
+            ).evaluate("$")
+            == "Root"
+        )
+    
+    def test_content_reference_type(self):
+        assert(
+            ContentReferenceType(
+                parameters={"Key1": "Value1", "Key2": "Value2"},
+                file_content={
+                    "Root": {
+                        "foo": 1,
+                        "bar": 2
+                    }
+                }
+            ).evaluate("$.Root.foo")
+            == 1
+        )
+
 
 class TestReferenceTypeFactory:
     def test_reference_type_factory(self):
